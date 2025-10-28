@@ -1,0 +1,12 @@
+node_modules
+.next
+dist
+coverage
+.env
+.env.*
+.prisma
+.DS_Store
+**/tmp
+pnpm-lock.yaml
+yarn.lock
+package-lock.json

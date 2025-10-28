@@ -1,0 +1,23 @@
+{
+  "name": "notania",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:web": "pnpm --filter web dev",
+    "dev:api": "pnpm --filter api dev",
+    "build": "pnpm --filter web build && pnpm --filter api build",
+    "lint": "pnpm lint --recursive",
+    "test": "pnpm --recursive test",
+    "format": "pnpm --recursive format",
+    "prepare": "husky install"
+  },
+  "devDependencies": {
+    "@types/node": "20.12.7",
+    "husky": "9.0.11",
+    "typescript": "5.4.5"
+  }
+}
