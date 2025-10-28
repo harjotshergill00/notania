@@ -14,6 +14,50 @@ function verifyToken(token) {
   return jwt.verify(token, JWT_SECRET);
 }
 
+function createAdminToken(email) {
+  return issueToken({ role: 'admin', email });
+}
+
+function createMemberToken(userId) {
+  return issueToken({ role: 'member', userId });
+}
+
+function extractToken(req) {
+  const authHeader = req.headers.authorization;
+  const queryToken = req.query.token;
+  if (authHeader?.startsWith('Bearer ')) {
+    return authHeader.split(' ')[1];
+  }
+  return queryToken;
+}
+
+function requireRole(role) {
+  return (req, res, next) => {
+    try {
+      const token = extractToken(req);
+      if (!token) {
+        return res.status(401).json({ message: 'Unauthorized' });
+      }
+
+      const payload = verifyToken(token);
+      if (payload.role !== role) {
+        return res.status(403).json({ message: 'Forbidden' });
+      }
+
+      if (role === 'admin') {
+        req.admin = payload;
+      }
+      if (role === 'member') {
+        req.member = { userId: payload.userId };
+      }
+
+      return next();
+    } catch (error) {
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
+  };
+}
+
 function authenticateAdmin(email, password) {
   if (email !== ADMIN_EMAIL) {
     return false;
@@ -21,28 +65,13 @@ function authenticateAdmin(email, password) {
   return bcrypt.compareSync(password, ADMIN_PASSWORD_HASH);
 }
 
-function requireAdmin(req, res, next) {
-  try {
-    const authHeader = req.headers.authorization;
-    const queryToken = req.query.token;
-    const token = authHeader?.startsWith('Bearer ')
-      ? authHeader.split(' ')[1]
-      : queryToken;
-
-    if (!token) {
-      return res.status(401).json({ message: 'Unauthorized' });
-    }
-
-    const payload = verifyToken(token);
-    req.admin = payload;
-    return next();
-  } catch (error) {
-    return res.status(401).json({ message: 'Unauthorized' });
-  }
-}
+const requireAdmin = requireRole('admin');
+const requireMember = requireRole('member');
 
 module.exports = {
   authenticateAdmin,
-  issueToken,
+  createAdminToken,
+  createMemberToken,
   requireAdmin,
+  requireMember,
 };

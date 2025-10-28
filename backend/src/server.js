@@ -15,9 +15,17 @@ const {
   getResumeById,
   getLatestTransaction,
   listOrders,
+  listOrdersForUser,
+  getUserByEmail,
 } = require('./db');
 const emailService = require('./email');
-const { authenticateAdmin, issueToken, requireAdmin } = require('./auth');
+const {
+  authenticateAdmin,
+  createAdminToken,
+  createMemberToken,
+  requireAdmin,
+  requireMember,
+} = require('./auth');
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -75,6 +83,25 @@ function buildOnboardingResponse({ user, resume, order, transaction }) {
       status: transaction.status,
     },
   };
+}
+
+function formatMemberOrders(orderBundles) {
+  return orderBundles.map(({ order, resume, transaction }) => ({
+    id: order.id,
+    membership_plan: order.membership_plan,
+    status: order.status,
+    created_at: order.created_at,
+    desired_role: order.desired_role,
+    job_attributes: order.job_attributes,
+    project_notes: order.project_notes,
+    resume: resume
+      ? {
+          id: resume.id,
+          original_name: resume.original_name,
+        }
+      : null,
+    transaction: transaction || null,
+  }));
 }
 
 app.post('/api/onboarding', upload.single('resume'), (req, res) => {
@@ -135,6 +162,8 @@ app.post('/api/onboarding', upload.single('resume'), (req, res) => {
     });
 
     const response = buildOnboardingResponse({ user, resume, order, transaction });
+    const authToken = createMemberToken(user.id);
+    const orders = formatMemberOrders(listOrdersForUser(user.id));
 
     emailService.sendMemberReceipt({
       fullName,
@@ -156,7 +185,11 @@ app.post('/api/onboarding', upload.single('resume'), (req, res) => {
       });
     }
 
-    return res.status(201).json(response);
+    return res.status(201).json({
+      ...response,
+      authToken,
+      orders,
+    });
   } catch (error) {
     console.error('Onboarding error', error);
     return res.status(500).json({ message: 'Unable to process onboarding request.' });
@@ -212,8 +245,45 @@ app.post('/api/admin/login', (req, res) => {
     return res.status(401).json({ message: 'Invalid credentials.' });
   }
 
-  const token = issueToken({ email });
+  const token = createAdminToken(email);
   return res.json({ token });
+});
+
+app.post('/api/auth/login', (req, res) => {
+  try {
+    const { email, password } = req.body || {};
+    if (!email || !password) {
+      return res.status(400).json({ message: 'Email and password are required.' });
+    }
+
+    const normalizedEmail = email.trim().toLowerCase();
+    const user = getUserByEmail(normalizedEmail);
+    if (!user) {
+      return res.status(401).json({ message: 'Invalid credentials.' });
+    }
+
+    const passwordValid = bcrypt.compareSync(password, user.password_hash);
+    if (!passwordValid) {
+      return res.status(401).json({ message: 'Invalid credentials.' });
+    }
+
+    const token = createMemberToken(user.id);
+    const orders = formatMemberOrders(listOrdersForUser(user.id));
+
+    return res.json({
+      token,
+      user: {
+        id: user.id,
+        fullName: user.full_name,
+        email: user.email,
+        phone: user.phone,
+      },
+      orders,
+    });
+  } catch (error) {
+    console.error('Member login error', error);
+    return res.status(500).json({ message: 'Unable to complete login request.' });
+  }
 });
 
 app.get('/api/admin/orders', requireAdmin, (req, res) => {
@@ -248,6 +318,33 @@ app.get('/api/admin/orders', requireAdmin, (req, res) => {
   } catch (error) {
     console.error('Fetch orders error', error);
     return res.status(500).json({ message: 'Unable to load orders.' });
+  }
+});
+
+app.get('/api/members/orders', requireMember, (req, res) => {
+  try {
+    const orders = formatMemberOrders(listOrdersForUser(req.member.userId));
+
+    return res.json({ orders });
+  } catch (error) {
+    console.error('Member orders error', error);
+    return res.status(500).json({ message: 'Unable to load orders.' });
+  }
+});
+
+app.get('/api/members/orders/:orderId/resume', requireMember, (req, res) => {
+  try {
+    const { orderId } = req.params;
+    const orders = listOrdersForUser(req.member.userId);
+    const match = orders.find(({ order }) => order.id === Number(orderId));
+    if (!match || !match.resume) {
+      return res.status(404).json({ message: 'Resume not found.' });
+    }
+
+    return res.sendFile(path.resolve(match.resume.file_path));
+  } catch (error) {
+    console.error('Member resume error', error);
+    return res.status(500).json({ message: 'Unable to retrieve resume.' });
   }
 });
 

@@ -212,12 +212,23 @@ function listOrders() {
   return state.orders
     .slice()
     .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
-    .map((order) => ({
-      order,
-      user: getUserById(order.user_id),
-      resume: getResumeById(order.resume_id),
-      transaction: getLatestTransaction(order.id),
-    }));
+    .map(buildOrderBundle);
+}
+
+function buildOrderBundle(order) {
+  return {
+    order,
+    user: getUserById(order.user_id),
+    resume: getResumeById(order.resume_id),
+    transaction: getLatestTransaction(order.id),
+  };
+}
+
+function listOrdersForUser(userId) {
+  return state.orders
+    .filter((order) => order.user_id === Number(userId))
+    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+    .map(buildOrderBundle);
 }
 
 module.exports = {
@@ -230,5 +241,7 @@ module.exports = {
   getOrderById,
   getResumeById,
   getLatestTransaction,
+  getUserByEmail,
   listOrders,
+  listOrdersForUser,
 };

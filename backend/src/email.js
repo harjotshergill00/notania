@@ -17,14 +17,14 @@ function logEmail(to, subject, body) {
 }
 
 function notifySales(request) {
-  const subject = `New NotAnAI onboarding request — ${request.fullName}`;
+  const subject = `New member onboarding request — ${request.fullName}`;
   const body = `Membership: ${request.membershipPlan}\nEmail: ${request.email}\nPhone: ${request.phone}\nDesired role: ${request.desiredRole}\nAttributes: ${request.jobAttributes}\nNotes: ${request.projectNotes}\nOrder ID: ${request.orderId}`;
   logEmail('sale@notanai.ca', subject, body);
 }
 
 function sendMemberReceipt(request) {
-  const subject = `You're in! NotAnAI membership #${request.orderId}`;
-  const body = `Hi ${request.fullName},\n\nThanks for trusting NotAnAI. Your membership plan ${request.membershipPlan} is locked and your specialists are reviewing your resume. We'll send updates from this inbox and through the admin desk.\n\n— NotAnAI Squad`;
+  const subject = `Welcome to NotAnAI — membership #${request.orderId}`;
+  const body = `Hi ${request.fullName},\n\nThank you for confirming your ${request.membershipPlan} membership with NotAnAI. Our specialist team is reviewing your intake details and will provide updates through the member portal and email.\n\nWe appreciate the opportunity to support your next career move.\n\n— NotAnAI Member Success`;
   logEmail(request.email, subject, body);
 }
 

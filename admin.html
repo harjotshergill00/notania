@@ -207,8 +207,8 @@
 
     <main class="container">
       <section id="login-panel" class="panel">
-        <h2>Admin login</h2>
-        <p class="orders-empty">Use your NotAnAI credentials to access member orders.</p>
+        <h2>Specialist login</h2>
+        <p class="orders-empty">Use your NotAnAI specialist credentials to access member orders.</p>
         <form id="login-form" novalidate>
           <label>
             Admin email
@@ -366,7 +366,7 @@
                     <option value="ready_for_review" ${order.status === "ready_for_review" ? "selected" : ""}>Ready for review</option>
                     <option value="completed" ${order.status === "completed" ? "selected" : ""}>Completed</option>
                   </select>
-                  <button class="btn-ghost" type="button" data-assign="${order.id}">Mark update</button>
+                  <button class="btn-ghost" type="button" data-assign="${order.id}">Update status</button>
                 </div>
               </td>
             `;
