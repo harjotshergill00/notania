@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>NotAnAI Admin Desk</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --night: #040510;
+        --deep: #07091b;
+        --mint: #67f7c4;
+        --iris: #7f74ff;
+        --border: rgba(255, 255, 255, 0.12);
+        --text: rgba(237, 243, 255, 0.96);
+        --muted: rgba(191, 203, 235, 0.7);
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: radial-gradient(circle at 10% -20%, rgba(127, 116, 255, 0.28), transparent 55%),
+          linear-gradient(160deg, #040510, #07091b);
+        color: var(--text);
+        min-height: 100vh;
+      }
+
+      header {
+        padding: 2.5rem 0 1.5rem;
+        text-align: center;
+      }
+
+      header h1 {
+        margin: 0 0 0.8rem;
+        font-size: clamp(2rem, 4vw, 2.6rem);
+      }
+
+      header p {
+        margin: 0;
+        color: var(--muted);
+      }
+
+      .container {
+        width: min(1100px, 92vw);
+        margin: 0 auto 4rem;
+      }
+
+      .panel {
+        background: rgba(7, 9, 27, 0.82);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: clamp(1.8rem, 5vw, 2.4rem);
+        box-shadow: 0 18px 40px rgba(8, 10, 24, 0.35);
+      }
+
+      form {
+        display: grid;
+        gap: 1.2rem;
+      }
+
+      label {
+        display: grid;
+        gap: 0.5rem;
+        font-size: 0.95rem;
+        color: var(--muted);
+      }
+
+      input,
+      select,
+      textarea {
+        font: inherit;
+        padding: 0.75rem 0.85rem;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(12, 14, 32, 0.8);
+        color: var(--text);
+      }
+
+      input:focus-visible,
+      select:focus-visible,
+      textarea:focus-visible {
+        outline: none;
+        border-color: rgba(127, 116, 255, 0.6);
+        box-shadow: 0 0 0 4px rgba(127, 116, 255, 0.25);
+      }
+
+      button {
+        font: inherit;
+        border-radius: 12px;
+        border: 0;
+        padding: 0.75rem 1.4rem;
+        cursor: pointer;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+      }
+
+      .btn-primary {
+        background: linear-gradient(120deg, rgba(103, 247, 196, 0.94), rgba(127, 116, 255, 0.94));
+        color: #040510;
+      }
+
+      .btn-ghost {
+        background: transparent;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        color: var(--text);
+      }
+
+      .hidden {
+        display: none !important;
+      }
+
+      .dashboard {
+        display: grid;
+        gap: 2rem;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.92rem;
+      }
+
+      th,
+      td {
+        padding: 0.9rem 1rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        text-align: left;
+        vertical-align: top;
+      }
+
+      th {
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        font-size: 0.75rem;
+      }
+
+      tbody tr:hover {
+        background: rgba(10, 12, 30, 0.6);
+      }
+
+      .intake-detail {
+        margin-top: 0.35rem;
+        font-size: 0.8rem;
+        color: var(--muted);
+      }
+
+      .intake-detail strong {
+        color: var(--mint);
+      }
+
+      .status-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        border-radius: 999px;
+        padding: 0.3rem 0.75rem;
+        background: rgba(103, 247, 196, 0.18);
+        color: var(--mint);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        font-size: 0.7rem;
+      }
+
+      .actions {
+        display: flex;
+        gap: 0.6rem;
+        flex-wrap: wrap;
+      }
+
+      .orders-empty {
+        text-align: center;
+        padding: 2rem 0;
+        color: var(--muted);
+      }
+
+      .alert {
+        padding: 0.75rem 1rem;
+        border-radius: 12px;
+        background: rgba(255, 127, 158, 0.12);
+        border: 1px solid rgba(255, 127, 158, 0.4);
+        color: #ffb3c7;
+        margin-bottom: 1.2rem;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>NotAnAI Specialist Desk</h1>
+      <p>Track memberships, download resumes, and mark fulfillment progress.</p>
+    </header>
+
+    <main class="container">
+      <section id="login-panel" class="panel">
+        <h2>Admin login</h2>
+        <p class="orders-empty">Use your NotAnAI credentials to access member orders.</p>
+        <form id="login-form" novalidate>
+          <label>
+            Admin email
+            <input type="email" name="email" autocomplete="email" required />
+          </label>
+          <label>
+            Password
+            <input type="password" name="password" autocomplete="current-password" required />
+          </label>
+          <button class="btn-primary" type="submit">Sign in</button>
+        </form>
+        <div class="alert hidden" id="login-error" role="alert"></div>
+      </section>
+
+      <section id="dashboard" class="dashboard hidden">
+        <div class="panel">
+          <header style="display: flex; justify-content: space-between; align-items: center; gap: 1rem;">
+            <div>
+              <h2 style="margin: 0 0 0.25rem;">Active orders</h2>
+              <p style="margin: 0; color: var(--muted);">Review onboarding details, confirm payments, and assign specialists.</p>
+            </div>
+            <button class="btn-ghost" type="button" id="logout">Sign out</button>
+          </header>
+          <div class="alert hidden" id="dashboard-alert" role="status"></div>
+          <div class="table-wrapper">
+            <table aria-describedby="order-table-caption">
+              <caption id="order-table-caption" class="hidden">List of active NotAnAI member orders</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Order</th>
+                  <th scope="col">Member</th>
+                  <th scope="col">Resume</th>
+                  <th scope="col">Payment</th>
+                  <th scope="col">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="orders-body">
+                <tr>
+                  <td colspan="5" class="orders-empty">Loading orders...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const loginForm = document.getElementById("login-form");
+      const loginPanel = document.getElementById("login-panel");
+      const loginError = document.getElementById("login-error");
+      const dashboard = document.getElementById("dashboard");
+      const dashboardAlert = document.getElementById("dashboard-alert");
+      const ordersBody = document.getElementById("orders-body");
+      const logoutButton = document.getElementById("logout");
+      const STORAGE_KEY = "notanai.admin.token";
+
+      function setToken(token) {
+        sessionStorage.setItem(STORAGE_KEY, token);
+      }
+
+      function getToken() {
+        return sessionStorage.getItem(STORAGE_KEY);
+      }
+
+      function clearToken() {
+        sessionStorage.removeItem(STORAGE_KEY);
+      }
+
+      function showDashboard() {
+        loginPanel.classList.add("hidden");
+        dashboard.classList.remove("hidden");
+        fetchOrders();
+      }
+
+      function showLogin(errorMessage) {
+        dashboard.classList.add("hidden");
+        loginPanel.classList.remove("hidden");
+        if (errorMessage) {
+          loginError.textContent = errorMessage;
+          loginError.classList.remove("hidden");
+        } else {
+          loginError.classList.add("hidden");
+        }
+      }
+
+      function orderStatusTag(status) {
+        return `<span class="status-tag">${status.replace(/_/g, " ")}</span>`;
+      }
+
+      function paymentSummary(transaction) {
+        if (!transaction) {
+          return "No transaction";
+        }
+        const amount = (transaction.amount_cents / 100).toFixed(2);
+        return `${transaction.status.toUpperCase()} • $${amount}`;
+      }
+
+      async function fetchOrders() {
+        const token = getToken();
+        if (!token) {
+          showLogin();
+          return;
+        }
+
+        ordersBody.innerHTML = `<tr><td colspan="5" class="orders-empty">Loading orders...</td></tr>`;
+
+        try {
+          const response = await fetch("/api/admin/orders", {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+
+          if (!response.ok) {
+            throw new Error("Unable to load orders");
+          }
+
+          const data = await response.json();
+          if (!data.orders.length) {
+            ordersBody.innerHTML = `<tr><td colspan="5" class="orders-empty">No orders yet.</td></tr>`;
+            return;
+          }
+
+          ordersBody.innerHTML = "";
+          data.orders.forEach((order) => {
+            const row = document.createElement("tr");
+            const intakeRole = order.intake?.desired_role ? `<div class="intake-detail"><strong>Role:</strong> ${order.intake.desired_role}</div>` : "";
+            const intakeAttributes = order.intake?.job_attributes ? `<div class="intake-detail"><strong>Must-haves:</strong> ${order.intake.job_attributes}</div>` : "";
+            const intakeNotes = order.intake?.project_notes ? `<div class="intake-detail">${order.intake.project_notes}</div>` : "";
+            const resumeLink = `/api/admin/resumes/${order.resume.id}?token=${token}`;
+            row.innerHTML = `
+              <td>
+                <strong>#${order.id}</strong><br />
+                <span>${order.membership_plan.replace(/_/g, " ")}</span><br />
+                ${orderStatusTag(order.status)}
+                ${intakeRole}
+                ${intakeAttributes}
+                ${intakeNotes}
+              </td>
+              <td>
+                <strong>${order.user.full_name}</strong><br />
+                <a href="mailto:${order.user.email}">${order.user.email}</a><br />
+                <span>${order.user.phone}</span>
+              </td>
+              <td>
+                <a href="${resumeLink}" target="_blank" rel="noopener">Download CV</a><br />
+                <small>${order.resume.original_name}</small>
+              </td>
+              <td>${paymentSummary(order.transaction)}</td>
+              <td>
+                <div class="actions">
+                  <select data-order="${order.id}" class="status-select">
+                    <option value="intake" ${order.status === "intake" ? "selected" : ""}>Intake</option>
+                    <option value="payment_received" ${order.status === "payment_received" ? "selected" : ""}>Payment received</option>
+                    <option value="in_progress" ${order.status === "in_progress" ? "selected" : ""}>In progress</option>
+                    <option value="ready_for_review" ${order.status === "ready_for_review" ? "selected" : ""}>Ready for review</option>
+                    <option value="completed" ${order.status === "completed" ? "selected" : ""}>Completed</option>
+                  </select>
+                  <button class="btn-ghost" type="button" data-assign="${order.id}">Mark update</button>
+                </div>
+              </td>
+            `;
+            ordersBody.appendChild(row);
+          });
+        } catch (error) {
+          console.error(error);
+          ordersBody.innerHTML = `<tr><td colspan="5" class="orders-empty">${error.message}</td></tr>`;
+        }
+      }
+
+      loginForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        loginError.classList.add("hidden");
+
+        const formData = new FormData(loginForm);
+        try {
+          const response = await fetch("/api/admin/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              email: formData.get("email"),
+              password: formData.get("password"),
+            }),
+          });
+
+          if (!response.ok) {
+            const error = await response.json().catch(() => ({ message: "Invalid credentials" }));
+            throw new Error(error.message || "Invalid credentials");
+          }
+
+          const data = await response.json();
+          setToken(data.token);
+          showDashboard();
+        } catch (error) {
+          loginError.textContent = error.message || "Unable to sign in.";
+          loginError.classList.remove("hidden");
+        }
+      });
+
+      logoutButton.addEventListener("click", () => {
+        clearToken();
+        showLogin();
+      });
+
+      ordersBody.addEventListener("click", async (event) => {
+        const button = event.target.closest("button[data-assign]");
+        if (!button) return;
+        const orderId = button.dataset.assign;
+        const select = ordersBody.querySelector(`select[data-order="${orderId}"]`);
+        if (!select) return;
+        const status = select.value;
+        const token = getToken();
+
+        try {
+          const response = await fetch(`/api/admin/orders/${orderId}/status`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({ status }),
+          });
+
+          if (!response.ok) {
+            const error = await response.json().catch(() => ({ message: "Unable to update status." }));
+            throw new Error(error.message || "Unable to update status.");
+          }
+
+          dashboardAlert.textContent = `Order #${orderId} updated to ${status.replace(/_/g, " ")}.`;
+          dashboardAlert.classList.remove("hidden");
+          fetchOrders();
+        } catch (error) {
+          dashboardAlert.textContent = error.message;
+          dashboardAlert.classList.remove("hidden");
+        }
+      });
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const token = getToken();
+        if (token) {
+          showDashboard();
+        }
+      });
+    </script>
+  </body>
+</html>
