@@ -1,0 +1,18 @@
+[
+  {
+    "slug": "starlight-racer",
+    "title": "Starlight Racer",
+    "description": "Boost through neon galaxies in this fast-paced endless runner.",
+    "genre": "Action",
+    "categories": ["Featured", "Top Rated"],
+    "tags": ["arcade", "endless", "retro"],
+    "rating": 4.7,
+    "players": 512345,
+    "releaseDate": "2023-04-10T00:00:00.000Z",
+    "playUrl": "https://games.notania.games/starlight-racer/index.html",
+    "thumbnailUrl": "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=600&q=80",
+    "developer": "Nebula Forge",
+    "publisher": "Nebula Forge",
+    "featured": true
+  }
+]

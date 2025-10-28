@@ -1,0 +1,61 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Game {
+  id           String   @id @default(cuid())
+  slug         String   @unique
+  title        String
+  description  String
+  genre        String
+  categories   String[]
+  tags         String[]
+  rating       Float    @default(0)
+  players      Int      @default(0)
+  releaseDate  DateTime
+  playUrl      String
+  thumbnailUrl String
+  developer    String
+  publisher    String
+  featured     Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  favorites    Favorite[]
+  histories    History[]
+}
+
+model User {
+  id           String      @id @default(cuid())
+  email        String      @unique
+  passwordHash String
+  displayName  String
+  avatarUrl    String?
+  favorites    Favorite[]
+  histories    History[]
+  createdAt    DateTime    @default(now())
+}
+
+model Favorite {
+  id        String   @id @default(cuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  game      Game     @relation(fields: [gameId], references: [id])
+  gameId    String
+  createdAt DateTime @default(now())
+  @@unique([userId, gameId])
+}
+
+model History {
+  id        String   @id @default(cuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  game      Game     @relation(fields: [gameId], references: [id])
+  gameId    String
+  playedAt  DateTime @default(now())
+  @@index([userId, playedAt])
+}
