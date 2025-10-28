@@ -1,797 +1,751 @@
- (cd "$(git rev-parse --show-toplevel)" && git apply --3way <<'EOF' 
-diff --git a/h b/h
-deleted file mode 100644
-index 6e9f0da13f19b444ec3a9c3d6e795ad35c0554a2..0000000000000000000000000000000000000000
---- a/h
-+++ /dev/null
-@@ -1 +0,0 @@
--h
-diff --git a/index.html b/index.html
-new file mode 100644
-index 0000000000000000000000000000000000000000..eed1f9e2feb4aada50e0cefa3ff7f78bf80656e6
---- /dev/null
-+++ b/index.html
-@@ -0,0 +1,780 @@
-+<!DOCTYPE html>
-+<html lang="en">
-+  <head>
-+    <meta charset="utf-8" />
-+    <meta name="viewport" content="width=device-width, initial-scale=1" />
-+    <title>NotAnAI &ndash; Human-Crafted Resumes</title>
-+    <meta
-+      name="description"
-+      content="NotAnAI crafts human-reviewed, ATS-tested resumes that feel authentic and help you stand out."
-+    />
-+    <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
-+    <script>
-+      tailwind.config = {
-+        theme: {
-+          extend: {
-+            colors: {
-+              night: '#050711',
-+              galaxy: '#0E1324',
-+              aurora: '#7FFFD4',
-+              pulse: '#67E8F9',
-+              plasm: '#A855F7',
-+              lime: '#C9F269',
-+            },
-+            fontFamily: {
-+              sans: ['"Plus Jakarta Sans"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-+            },
-+            boxShadow: {
-+              glow: '0 35px 80px rgba(103, 232, 249, 0.25)',
-+              sheet: '0 25px 50px rgba(10, 18, 42, 0.55)',
-+              neon: '0 0 0 2px rgba(121, 255, 212, 0.18), 0 30px 90px rgba(121, 255, 212, 0.18)',
-+              glass: '0 25px 60px rgba(10, 18, 42, 0.55)',
-+            },
-+            backgroundImage: {
-+              aurora:
-+                'radial-gradient(circle at 20% 20%, rgba(103, 232, 249, 0.28), transparent 55%), radial-gradient(circle at 80% 10%, rgba(168, 85, 247, 0.28), transparent 45%), radial-gradient(circle at 50% 90%, rgba(201, 242, 105, 0.2), transparent 60%)',
-+              mesh:
-+                'linear-gradient(135deg, rgba(12, 20, 40, 0.95), rgba(6, 10, 20, 0.92)), radial-gradient(120% 120% at 10% 10%, rgba(168, 85, 247, 0.15) 0%, transparent 55%), radial-gradient(120% 120% at 90% 10%, rgba(103, 232, 249, 0.2) 0%, transparent 65%)',
-+            },
-+            keyframes: {
-+              float: {
-+                '0%, 100%': { transform: 'translateY(0px)' },
-+                '50%': { transform: 'translateY(-12px)' },
-+              },
-+              pulseGlow: {
-+                '0%, 100%': { opacity: 0.35, transform: 'scale(1)' },
-+                '50%': { opacity: 0.75, transform: 'scale(1.12)' },
-+              },
-+              tilt: {
-+                '0%, 100%': { transform: 'rotate(-2deg)' },
-+                '50%': { transform: 'rotate(2deg)' },
-+              },
-+              shimmer: {
-+                '0%': { transform: 'translateX(-100%)' },
-+                '100%': { transform: 'translateX(100%)' },
-+              },
-+            },
-+            animation: {
-+              float: 'float 6s ease-in-out infinite',
-+              pulseGlow: 'pulseGlow 8s ease-in-out infinite',
-+              tilt: 'tilt 10s ease-in-out infinite',
-+              shimmer: 'shimmer 2s linear infinite',
-+            },
-+            backdropBlur: {
-+              20: '20px',
-+            },
-+          },
-+        },
-+      };
-+    </script>
-+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
-+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-+    <link
-+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
-+      rel="stylesheet"
-+    />
-+    <style>
-+      body::before {
-+        content: '';
-+        position: fixed;
-+        inset: 0;
-+        z-index: -2;
-+        background: radial-gradient(circle at 10% 20%, rgba(103, 232, 249, 0.12), transparent 55%),
-+          radial-gradient(circle at 85% 35%, rgba(168, 85, 247, 0.15), transparent 60%),
-+          radial-gradient(circle at 50% 90%, rgba(201, 242, 105, 0.1), transparent 55%);
-+        pointer-events: none;
-+      }
-+      body::after {
-+        content: '';
-+        position: fixed;
-+        inset: 0;
-+        z-index: -3;
-+        background: linear-gradient(160deg, #04060f 0%, #060b18 35%, #050711 100%);
-+      }
-+    </style>
-+  </head>
-+  <body class="min-h-screen bg-night font-sans text-slate-100 antialiased">
-+    <div class="relative overflow-hidden">
-+      <div class="absolute inset-0 -z-10 bg-mesh"></div>
-+      <div class="pointer-events-none absolute inset-0 -z-10 bg-aurora opacity-70 mix-blend-screen"></div>
-+
-+      <header class="sticky top-0 z-40 border-b border-white/5 bg-night/70 backdrop-blur-20">
-+        <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 lg:px-12">
-+          <a href="#home" class="flex items-center gap-3 text-lg font-semibold text-white">
-+            <span class="relative flex h-12 w-12 items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-aurora/90 via-pulse/80 to-plasm/80 shadow-neon">
-+              <span class="absolute inset-0 animate-pulseGlow rounded-2xl bg-aurora/50 blur-lg"></span>
-+              <svg class="relative h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-+                <path d="M12 3 7 12l5 9 5-9-5-9Z" />
-+                <path d="M7 12h10" />
-+              </svg>
-+            </span>
-+            <span>NotAnAI</span>
-+          </a>
-+          <nav class="hidden items-center gap-8 text-sm font-medium text-slate-300 md:flex">
-+            <a class="transition hover:text-aurora" href="#home">Home</a>
-+            <a class="transition hover:text-aurora" href="#experience">Experience</a>
-+            <a class="transition hover:text-aurora" href="#how-it-works">How It Works</a>
-+            <a class="transition hover:text-aurora" href="#why-notanai">Why NotAnAI</a>
-+            <a class="transition hover:text-aurora" href="#pricing">Pricing</a>
-+            <a class="transition hover:text-aurora" href="#contact">Contact</a>
-+          </nav>
-+          <a
-+            href="#pricing"
-+            class="hidden items-center gap-2 rounded-full border border-aurora/50 bg-white/5 px-5 py-2 text-sm font-semibold text-white transition hover:border-aurora hover:text-aurora md:inline-flex"
-+          >
-+            <span class="relative flex h-2.5 w-2.5">
-+              <span class="absolute inset-0 animate-ping rounded-full bg-aurora"></span>
-+              <span class="relative inline-flex h-2.5 w-2.5 rounded-full bg-aurora"></span>
-+            </span>
-+            Book A Human Expert
-+          </a>
-+        </div>
-+      </header>
-+
-+      <main>
-+        <section id="home" class="relative">
-+          <div class="mx-auto flex max-w-7xl flex-col gap-10 px-6 pb-24 pt-16 lg:flex-row lg:items-start lg:gap-12 lg:px-12">
-+            <!-- sidebar -->
-+            <aside class="mx-auto flex w-full max-w-[220px] flex-col gap-6 rounded-3xl border border-white/10 bg-white/5/70 p-6 shadow-glass backdrop-blur-20 lg:sticky lg:top-28 lg:mx-0">
-+              <div class="flex items-center gap-4">
-+                <div class="relative h-16 w-16">
-+                  <div class="absolute inset-0 animate-pulseGlow rounded-2xl bg-aurora/40 blur-md"></div>
-+                  <div class="relative flex h-full w-full items-center justify-center rounded-2xl bg-gradient-to-br from-aurora/40 via-pulse/30 to-plasm/40 ring-1 ring-white/10">
-+                    <svg class="h-8 w-8 text-white/80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-+                      <path d="M12 5a4 4 0 0 0-4 4v1H5l1 9h12l1-9h-3V9a4 4 0 0 0-4-4Z" />
-+                      <path d="M12 13v4" />
-+                    </svg>
-+                  </div>
-+                </div>
-+                <div>
-+                  <p class="text-xs uppercase tracking-[0.3em] text-slate-400">Human Team</p>
-+                  <p class="text-base font-semibold text-white">24/7 resume artisans</p>
-+                </div>
-+              </div>
-+              <div class="space-y-4 text-sm text-slate-300">
-+                <p class="leading-relaxed">
-+                  Every resume is reimagined by a vetted human recruiter with ATS-level insight and brand storytelling finesse.
-+                </p>
-+                <p class="leading-relaxed">
-+                  Our live messaging keeps you looped in. Deliverables land within 48 hours&mdash;refinements are on us.
-+                </p>
-+              </div>
-+              <div class="flex flex-col gap-3 text-xs font-semibold uppercase tracking-[0.35em] text-slate-400">
-+                <div class="flex items-center justify-between text-slate-200">
-+                  <span>Turnaround</span>
-+                  <span class="text-aurora">48h</span>
-+                </div>
-+                <div class="flex items-center justify-between text-slate-200">
-+                  <span>Success rate</span>
-+                  <span class="text-aurora">93%</span>
-+                </div>
-+                <div class="flex items-center justify-between text-slate-200">
-+                  <span>Real editors</span>
-+                  <span class="text-aurora">Yes</span>
-+                </div>
-+              </div>
-+              <a
-+                href="#contact"
-+                class="group relative inline-flex items-center justify-center overflow-hidden rounded-full bg-gradient-to-r from-aurora/90 via-pulse/80 to-plasm/80 px-5 py-2 text-sm font-semibold text-night shadow-neon transition"
-+              >
-+                <span class="absolute inset-0 translate-x-[-100%] bg-white/40 opacity-0 transition group-hover:opacity-100">
-+                  <span class="absolute inset-0 animate-shimmer bg-gradient-to-r from-transparent via-white/60 to-transparent"></span>
-+                </span>
-+                <span class="relative">Talk to a human</span>
-+              </a>
-+            </aside>
-+
-+            <!-- hero card -->
-+            <div class="relative w-full flex-1">
-+              <div class="absolute -left-12 top-10 hidden h-72 w-72 animate-float rounded-full bg-aurora/15 blur-3xl lg:block"></div>
-+              <div class="absolute -right-12 -bottom-10 hidden h-80 w-80 animate-float rounded-full bg-plasm/15 blur-3xl lg:block"></div>
-+
-+              <div class="relative overflow-hidden rounded-[40px] border border-white/10 bg-white/10 shadow-glass backdrop-blur-20">
-+                <div class="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-white/10 via-white/5 to-transparent"></div>
-+                <div class="relative grid gap-10 px-10 py-12 lg:grid-cols-[1.1fr,0.9fr]">
-+                  <div class="space-y-6">
-+                    <span class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1 text-xs font-semibold uppercase tracking-[0.35em] text-slate-200">
-+                      Human-crafted · ATS-approved
-+                    </span>
-+                    <h1 class="text-4xl font-semibold text-white sm:text-5xl lg:text-[3.35rem] lg:leading-[1.1]">
-+                      Resumes that pass the test&mdash;crafted for humans, not machines.
-+                    </h1>
-+                    <p class="max-w-xl text-base leading-relaxed text-slate-300">
-+                      NotAnAI is a collective of human resume artisans. We decode your story, resequence every bullet for ATS scoring, and deliver on-brand narratives that feel unmistakably you.
-+                    </p>
-+                    <div class="flex flex-wrap gap-4">
-+                      <a
-+                        href="#pricing"
-+                        class="group relative inline-flex items-center gap-3 overflow-hidden rounded-full bg-gradient-to-r from-aurora via-pulse to-plasm px-7 py-3 text-sm font-semibold text-night shadow-glow transition hover:translate-y-[-1px]"
-+                      >
-+                        <span class="absolute inset-0 translate-x-[-120%] bg-white/30 opacity-0 transition group-hover:opacity-100">
-+                          <span class="absolute inset-0 animate-shimmer bg-gradient-to-r from-transparent via-white/70 to-transparent"></span>
-+                        </span>
-+                        <svg class="relative h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-+                          <path d="m5 12 5 5L20 7" />
-+                        </svg>
-+                        <span class="relative">Get a Human Review</span>
-+                      </a>
-+                      <a
-+                        href="#experience"
-+                        class="inline-flex items-center gap-3 rounded-full border border-white/15 px-7 py-3 text-sm font-semibold text-white transition hover:border-aurora hover:text-aurora"
-+                      >
-+                        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-+                          <path d="M5 12h14" />
-+                          <path d="m12 5 7 7-7 7" />
-+                        </svg>
-+                        Explore the process
-+                      </a>
-+                    </div>
-+                  </div>
-+
-+                  <div class="relative">
-+                    <div class="absolute -inset-10 -z-10 animate-pulseGlow rounded-[45px] bg-gradient-to-br from-aurora/20 via-pulse/30 to-plasm/20 blur-3xl"></div>
-+                    <div class="relative rounded-[32px] border border-white/15 bg-gradient-to-br from-white/10 via-white/5 to-white/10 p-6 shadow-glass">
-+                      <div class="flex items-center justify-between text-xs uppercase tracking-[0.4em] text-slate-300">
-+                        <span>Live preview</span>
-+                        <span>ATS score &mdash; 98</span>
-+                      </div>
-+                      <div class="mt-6 flex flex-col gap-5">
-+                        <div class="relative overflow-hidden rounded-3xl border border-white/10 bg-night/60 p-6 shadow-inner shadow-black/40">
-+                          <div class="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-aurora via-pulse to-plasm"></div>
-+                          <div class="flex items-center gap-4">
-+                            <div class="relative h-16 w-16">
-+                              <div class="absolute inset-0 rounded-full bg-gradient-to-tr from-aurora via-pulse to-plasm blur-sm"></div>
-+                              <div class="relative flex h-full w-full items-center justify-center rounded-full border border-white/10 bg-white/5">
-+                                <span class="text-2xl font-semibold text-white">RY</span>
-+                              </div>
-+                            </div>
-+                            <div>
-+                              <p class="text-sm uppercase tracking-[0.35em] text-aurora">Product Leader</p>
-+                              <p class="text-xl font-semibold text-white">Ryan Adler</p>
-+                              <p class="text-sm text-slate-300">Toronto, Canada</p>
-+                            </div>
-+                          </div>
-+                          <div class="mt-5 grid gap-4 text-sm text-slate-200">
-+                            <div>
-+                              <p class="font-semibold text-white">About Me</p>
-+                              <p class="mt-1 leading-relaxed text-slate-300">
-+                                9 years in SaaS product design. Spearheaded AI-assistive workflows at ScalePath and doubled enterprise retention.
-+                              </p>
-+                            </div>
-+                            <div class="grid gap-3 sm:grid-cols-2">
-+                              <div class="rounded-2xl border border-white/10 bg-white/5 p-3 text-xs">
-+                                <p class="uppercase tracking-[0.28em] text-slate-400">Strength</p>
-+                                <p class="mt-2 text-sm font-semibold text-white">Narrative Clarity</p>
-+                              </div>
-+                              <div class="rounded-2xl border border-white/10 bg-white/5 p-3 text-xs">
-+                                <p class="uppercase tracking-[0.28em] text-slate-400">Focus</p>
-+                                <p class="mt-2 text-sm font-semibold text-white">Product Strategy</p>
-+                              </div>
-+                            </div>
-+                          </div>
-+                        </div>
-+
-+                        <div class="grid gap-4 text-sm sm:grid-cols-2">
-+                          <div class="rounded-3xl border border-white/10 bg-white/5 p-5">
-+                            <p class="text-xs uppercase tracking-[0.3em] text-slate-400">Tone match</p>
-+                            <p class="mt-2 text-2xl font-semibold text-white">98%</p>
-+                            <p class="mt-1 text-slate-300">Keeps your voice authentic&mdash;verified by our linguists.</p>
-+                          </div>
-+                          <div class="rounded-3xl border border-white/10 bg-white/5 p-5">
-+                            <p class="text-xs uppercase tracking-[0.3em] text-slate-400">ATS audit</p>
-+                            <p class="mt-2 text-2xl font-semibold text-white">Pass</p>
-+                            <p class="mt-1 text-slate-300">Benchmarked against 200+ top applicant systems.</p>
-+                          </div>
-+                        </div>
-+                      </div>
-+                    </div>
-+                  </div>
-+                </div>
-+              </div>
-+            </div>
-+
-+            <!-- right column highlights -->
-+            <div class="flex w-full max-w-sm flex-col gap-6">
-+              <div class="relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-6 shadow-glass backdrop-blur-20">
-+                <div class="absolute inset-0 pointer-events-none">
-+                  <div class="absolute right-[-30%] top-[-20%] h-32 w-32 rounded-full bg-plasm/25 blur-3xl"></div>
-+                  <div class="absolute bottom-[-30%] left-[-20%] h-36 w-36 rounded-full bg-aurora/20 blur-3xl"></div>
-+                </div>
-+                <p class="text-xs uppercase tracking-[0.35em] text-slate-400">New drop</p>
-+                <h2 class="mt-2 text-2xl font-semibold text-white">Future-proof your first impression</h2>
-+                <p class="mt-3 text-sm leading-relaxed text-slate-300">
-+                  Your resume is micro-edited for readability, narrative flow, and AI detection bypass. Each bullet is rewritten to highlight impact metrics and leadership indicators.
-+                </p>
-+                <div class="mt-4 flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.3em] text-aurora">
-+                  <span class="flex items-center gap-2">
-+                    <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-+                      <path d="m5 12 5 5L20 7" />
-+                    </svg>
-+                    ATS Safe
-+                  </span>
-+                  <span class="flex items-center gap-2">
-+                    <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-+                      <path d="M5 12h14" />
-+                      <path d="m12 5 7 7-7 7" />
-+                    </svg>
-+                    Human led
-+                  </span>
-+                </div>
-+              </div>
-+
-+              <div class="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-white/5 via-white/10 to-white/5 p-6 shadow-glass">
-+                <div class="absolute inset-0 pointer-events-none">
-+                  <div class="absolute left-[-20%] top-[-30%] h-32 w-32 rounded-full bg-aurora/25 blur-3xl"></div>
-+                  <div class="absolute bottom-[-20%] right-[-20%] h-36 w-36 rounded-full bg-plasm/20 blur-3xl"></div>
-+                </div>
-+                <p class="text-xs uppercase tracking-[0.35em] text-slate-400">Live status</p>
-+                <div class="mt-4 flex items-center gap-4">
-+                  <div class="relative flex h-14 w-14 items-center justify-center rounded-2xl border border-white/10 bg-night">
-+                    <span class="absolute h-16 w-16 animate-ping rounded-full bg-aurora/60"></span>
-+                    <span class="relative flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-aurora via-pulse to-plasm text-night">
-+                      <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-+                        <path d="M21 15V6" />
-+                        <path d="m12 12 9 3-9 3-9-3 9-3Z" />
-+                        <path d="M3 6v9" />
-+                      </svg>
-+                    </span>
-+                  </div>
-+                  <div>
-+                    <p class="text-sm uppercase tracking-[0.3em] text-slate-400">Queue length</p>
-+                    <p class="mt-1 text-2xl font-semibold text-white">2 resumes</p>
-+                    <p class="text-xs text-slate-400">Submit today &mdash; guaranteed delivery by 48h.</p>
-+                  </div>
-+                </div>
-+                <div class="mt-5 grid gap-4 text-xs uppercase tracking-[0.3em] text-slate-400 sm:grid-cols-2">
-+                  <div class="rounded-2xl border border-white/10 bg-white/5 p-3 text-center">
-+                    <p class="text-sm font-semibold text-white">LinkedIn polishing</p>
-+                  </div>
-+                  <div class="rounded-2xl border border-white/10 bg-white/5 p-3 text-center">
-+                    <p class="text-sm font-semibold text-white">Cover letter add-on</p>
-+                  </div>
-+                </div>
-+              </div>
-+            </div>
-+          </div>
-+        </section>
-+
-+        <section id="experience" class="relative border-t border-white/5 bg-white/5/30">
-+          <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-aurora/40 to-transparent"></div>
-+          <div class="mx-auto grid max-w-7xl gap-12 px-6 py-20 lg:grid-cols-[0.9fr,1.1fr] lg:px-12">
-+            <div class="space-y-6">
-+              <p class="text-xs uppercase tracking-[0.35em] text-aurora">Resume experience</p>
-+              <h2 class="text-3xl font-semibold text-white sm:text-4xl">We combine brand storytelling with ATS precision.</h2>
-+              <p class="text-base leading-relaxed text-slate-300">
-+                Every project pairs you with a human resume architect, a voice specialist, and a QA lead. Our review pipeline stress-tests your resume against top ATS engines, ensuring no AI flags, weird syntax, or uncanny phrasing.
-+              </p>
-+              <div class="grid gap-4 text-sm text-slate-200">
-+                <div class="flex items-center gap-3">
-+                  <span class="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-aurora via-pulse to-plasm text-night">
-+                    <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-+                      <path d="M12 20v-6" />
-+                      <path d="M18 20V10" />
-+                      <path d="M6 20v-2" />
-+                      <path d="M3 3h18" />
-+                    </svg>
-+                  </span>
-+                  Metrics-first bullet rewrites tied to outcomes recruiters trust.
-+                </div>
-+                <div class="flex items-center gap-3">
-+                  <span class="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-aurora via-pulse to-plasm text-night">
-+                    <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-+                      <path d="m12 19 7-7-7-7" />
-+                      <path d="M5 12h14" />
-+                    </svg>
-+                  </span>
-+                  Empathetic storytelling that feels natural, confident, and uniquely yours.
-+                </div>
-+                <div class="flex items-center gap-3">
-+                  <span class="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-aurora via-pulse to-plasm text-night">
-+                    <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-+                      <path d="M20 6 9 17l-5-5" />
-+                    </svg>
-+                  </span>
-+                  QA team reviews against 200+ ATS rules, style guides, and recruiter heuristics.
-+                </div>
-+              </div>
-+            </div>
-+
-+            <div class="relative rounded-[36px] border border-white/10 bg-night/80 p-10 shadow-sheet">
-+              <div class="absolute -inset-1 rounded-[38px] bg-gradient-to-br from-aurora/15 via-pulse/15 to-plasm/15 blur-xl"></div>
-+              <div class="relative grid gap-6 text-sm text-slate-200">
-+                <div class="rounded-3xl border border-white/5 bg-white/5 p-5">
-+                  <p class="text-xs uppercase tracking-[0.3em] text-aurora">Pulse tracker</p>
-+                  <div class="mt-4 grid gap-4 sm:grid-cols-2">
-+                    <div>
-+                      <p class="text-xs uppercase tracking-[0.3em] text-slate-500">Interview callbacks</p>
-+                      <p class="mt-1 text-2xl font-semibold text-white">+42%</p>
-+                      <p class="text-xs text-slate-400">Avg. uplift after NotAnAI rewrite</p>
-+                    </div>
-+                    <div>
-+                      <p class="text-xs uppercase tracking-[0.3em] text-slate-500">Client satisfaction</p>
-+                      <p class="mt-1 text-2xl font-semibold text-white">4.9/5</p>
-+                      <p class="text-xs text-slate-400">Post-delivery survey results</p>
-+                    </div>
-+                  </div>
-+                </div>
-+                <div class="rounded-3xl border border-white/5 bg-white/5 p-5">
-+                  <p class="text-xs uppercase tracking-[0.3em] text-aurora">Human touchpoints</p>
-+                  <ul class="mt-4 space-y-3">
-+                    <li class="flex items-center gap-3 text-slate-300">
-+                      <span class="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-aurora via-pulse to-plasm text-night">1</span>
-+                      30-minute intake call with our strategist
-+                    </li>
-+                    <li class="flex items-center gap-3 text-slate-300">
-+                      <span class="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-aurora via-pulse to-plasm text-night">2</span>
-+                      Human-only rewrite with narrative stylists
-+                    </li>
-+                    <li class="flex items-center gap-3 text-slate-300">
-+                      <span class="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-aurora via-pulse to-plasm text-night">3</span>
-+                      ATS stress test + recruiter QA polish
-+                    </li>
-+                  </ul>
-+                </div>
-+                <div class="rounded-3xl border border-white/5 bg-gradient-to-r from-aurora/10 via-pulse/10 to-plasm/10 p-5">
-+                  <p class="text-xs uppercase tracking-[0.3em] text-aurora">Client spotlight</p>
-+                  <p class="mt-3 text-lg font-semibold text-white">“I got three interviews in one week.”</p>
-+                  <p class="mt-2 text-sm text-slate-300">“They kept my tone, tightened every bullet, and delivered a resume that reads like a feature story. Absolutely zero AI weirdness.”</p>
-+                  <p class="mt-3 text-xs uppercase tracking-[0.3em] text-slate-400">Sasha P. &mdash; Marketing Director</p>
-+                </div>
-+              </div>
-+            </div>
-+          </div>
-+        </section>
-+
-+        <section id="how-it-works" class="relative border-t border-white/5">
-+          <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-plasm/40 to-transparent"></div>
-+          <div class="mx-auto max-w-7xl px-6 py-20 lg:px-12">
-+            <div class="mx-auto max-w-3xl text-center">
-+              <span class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-5 py-2 text-xs font-semibold uppercase tracking-[0.4em] text-aurora">
-+                The flow
-+              </span>
-+              <h2 class="mt-6 text-3xl font-semibold text-white sm:text-4xl">The human rewrite pipeline</h2>
-+              <p class="mt-4 text-base leading-relaxed text-slate-300">
-+                Upload your resume, sync with your strategist, and let our human team iterate in real time. Each pass is tracked so you can see the transformation from raw draft to polished masterpiece.
-+              </p>
-+            </div>
-+            <div class="mt-16 grid gap-8 lg:grid-cols-3">
-+              <div class="group relative overflow-hidden rounded-[28px] border border-white/10 bg-white/5 p-8 shadow-glass transition hover:-translate-y-2">
-+                <div class="absolute inset-0 pointer-events-none">
-+                  <div class="absolute right-[-20%] top-[-30%] h-32 w-32 rounded-full bg-plasm/30 blur-3xl"></div>
-+                </div>
-+                <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-aurora via-pulse to-plasm text-night">
-+                  <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-+                    <path d="M12 3v5l3-3M12 8 9 5" />
-+                    <path d="M5 13V5.2C5 4 6 3 7.2 3h9.6C18 3 19 4 19 5.2V13" />
-+                    <path d="m5 13 7 7 7-7" />
-+                  </svg>
-+                </div>
-+                <h3 class="mt-6 text-xl font-semibold text-white">Upload</h3>
-+                <p class="mt-3 text-sm leading-relaxed text-slate-300">
-+                  Send your current resume, career goals, and target roles. We map your narrative gaps and highlight AI fingerprints to remove.
-+                </p>
-+              </div>
-+              <div class="group relative overflow-hidden rounded-[28px] border border-white/10 bg-white/5 p-8 shadow-glass transition hover:-translate-y-2">
-+                <div class="absolute inset-0 pointer-events-none">
-+                  <div class="absolute left-[-20%] top-[-30%] h-32 w-32 rounded-full bg-aurora/30 blur-3xl"></div>
-+                </div>
-+                <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-aurora via-pulse to-plasm text-night">
-+                  <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-+                    <path d="M19.5 16a7.5 7.5 0 0 0-15 0" />
-+                    <path d="M12 7v9" />
-+                    <path d="M9 10h6" />
-+                  </svg>
-+                </div>
-+                <h3 class="mt-6 text-xl font-semibold text-white">Human optimize</h3>
-+                <p class="mt-3 text-sm leading-relaxed text-slate-300">
-+                  Your strategist and voice specialist rewrite each section, layering metrics, storytelling arcs, and industry keywords to resonate with humans and ATS.
-+                </p>
-+              </div>
-+              <div class="group relative overflow-hidden rounded-[28px] border border-white/10 bg-white/5 p-8 shadow-glass transition hover:-translate-y-2">
-+                <div class="absolute inset-0 pointer-events-none">
-+                  <div class="absolute right-[-25%] bottom-[-30%] h-36 w-36 rounded-full bg-lime/25 blur-3xl"></div>
-+                </div>
-+                <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-aurora via-pulse to-plasm text-night">
-+                  <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-+                    <path d="M3 12h18" />
-+                    <path d="M12 3v18" />
-+                    <path d="M7 17l-4 4" />
-+                    <path d="M21 7l-4-4" />
-+                  </svg>
-+                </div>
-+                <h3 class="mt-6 text-xl font-semibold text-white">Ready to apply</h3>
-+                <p class="mt-3 text-sm leading-relaxed text-slate-300">
-+                  Receive polished PDF, Word, and ATS raw formats plus tailored cover letter copy. Iterate with us until you shout “nailed it!”.
-+                </p>
-+              </div>
-+            </div>
-+          </div>
-+        </section>
-+
-+        <section id="why-notanai" class="relative border-t border-white/5 bg-white/5/40">
-+          <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-aurora/40 to-transparent"></div>
-+          <div class="mx-auto max-w-7xl px-6 py-20 lg:px-12">
-+            <div class="grid gap-12 lg:grid-cols-[1fr,1fr]">
-+              <div class="space-y-6">
-+                <p class="text-xs uppercase tracking-[0.35em] text-aurora">Why NotAnAI</p>
-+                <h2 class="text-3xl font-semibold text-white sm:text-4xl">The antidote to AI-stamped resumes</h2>
-+                <p class="text-base leading-relaxed text-slate-300">
-+                  AI-sounding resumes collapse under human scrutiny. We ensure authentic cadence, nuanced storytelling, and a confident tone that aligns with leadership expectations.
-+                </p>
-+                <div class="grid gap-6 sm:grid-cols-2">
-+                  <div class="rounded-3xl border border-white/10 bg-white/5 p-6">
-+                    <p class="text-xs uppercase tracking-[0.3em] text-slate-400">AI generated</p>
-+                    <ul class="mt-4 space-y-3 text-sm text-slate-300">
-+                      <li class="flex items-center gap-3">
-+                        <span class="text-plasm">&times;</span>
-+                        Repetitive buzzwords
-+                      </li>
-+                      <li class="flex items-center gap-3">
-+                        <span class="text-plasm">&times;</span>
-+                        Generic impact statements
-+                      </li>
-+                      <li class="flex items-center gap-3">
-+                        <span class="text-plasm">&times;</span>
-+                        ATS flag risk
-+                      </li>
-+                    </ul>
-+                  </div>
-+                  <div class="rounded-3xl border border-aurora/30 bg-gradient-to-br from-aurora/20 via-pulse/20 to-plasm/20 p-6">
-+                    <p class="text-xs uppercase tracking-[0.3em] text-night">NotAnAI</p>
-+                    <ul class="mt-4 space-y-3 text-sm text-night">
-+                      <li class="flex items-center gap-3">
-+                        <span class="text-night">&#10003;</span>
-+                        Story-driven language
-+                      </li>
-+                      <li class="flex items-center gap-3">
-+                        <span class="text-night">&#10003;</span>
-+                        Measurable wins foregrounded
-+                      </li>
-+                      <li class="flex items-center gap-3">
-+                        <span class="text-night">&#10003;</span>
-+                        ATS compliance guaranteed
-+                      </li>
-+                    </ul>
-+                  </div>
-+                </div>
-+              </div>
-+              <div class="relative">
-+                <div class="absolute -inset-6 -z-10 rounded-[40px] bg-gradient-to-br from-aurora/20 via-pulse/25 to-plasm/20 blur-3xl"></div>
-+                <div class="relative overflow-hidden rounded-[36px] border border-white/10 bg-night/80 shadow-glass">
-+                  <div class="absolute inset-0 bg-[radial-gradient(circle_at_10%_20%,rgba(121,255,212,0.15),transparent_60%),radial-gradient(circle_at_80%_10%,rgba(103,232,249,0.15),transparent_55%)]"></div>
-+                  <div class="relative grid gap-6 p-10 text-sm text-slate-200">
-+                    <div class="rounded-3xl border border-white/5 bg-white/5 p-5">
-+                      <p class="text-xs uppercase tracking-[0.3em] text-aurora">Signature stack</p>
-+                      <p class="mt-3 text-lg font-semibold text-white">Resume + LinkedIn polish + Cover Letter</p>
-+                      <p class="mt-2 text-slate-300">Bundle built to make your digital footprint feel cohesive and unmistakably human.</p>
-+                    </div>
-+                    <div class="rounded-3xl border border-white/5 bg-white/5 p-5">
-+                      <p class="text-xs uppercase tracking-[0.3em] text-aurora">Before &amp; after</p>
-+                      <p class="mt-3 text-slate-300">
-+                        See the transformation across clarity, tone, and achievements. Every bullet gets narrative upgrades and recruiter-vetted keywords.
-+                      </p>
-+                    </div>
-+                    <div class="rounded-3xl border border-white/5 bg-gradient-to-r from-aurora/10 via-pulse/10 to-plasm/10 p-5">
-+                      <p class="text-xs uppercase tracking-[0.3em] text-aurora">Bonus library</p>
-+                      <p class="mt-3 text-slate-300">Includes networking scripts, interview follow-up templates, and salary negotiation prompts.</p>
-+                    </div>
-+                  </div>
-+                </div>
-+              </div>
-+            </div>
-+          </div>
-+        </section>
-+
-+        <section id="pricing" class="relative border-t border-white/5">
-+          <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-plasm/40 to-transparent"></div>
-+          <div class="mx-auto max-w-6xl px-6 py-20 text-center lg:px-12">
-+            <h2 class="text-3xl font-semibold text-white sm:text-4xl">Simple, transparent pricing</h2>
-+            <p class="mt-4 text-base leading-relaxed text-slate-300">
-+              One flat rate. Unlimited human revisions within seven days. 100% satisfaction guarantee.
-+            </p>
-+            <div class="mt-14 grid justify-center">
-+              <div class="relative w-full max-w-md overflow-hidden rounded-[36px] border border-aurora/40 bg-gradient-to-br from-night/80 via-night/60 to-night/80 p-10 text-left shadow-glass">
-+                <div class="absolute inset-0 pointer-events-none">
-+                  <div class="absolute left-[-20%] top-[-20%] h-40 w-40 rounded-full bg-aurora/30 blur-3xl"></div>
-+                  <div class="absolute right-[-25%] bottom-[-30%] h-44 w-44 rounded-full bg-plasm/25 blur-3xl"></div>
-+                </div>
-+                <div class="relative flex flex-col gap-6">
-+                  <span class="inline-flex items-center gap-2 self-start rounded-full border border-aurora/30 bg-aurora/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-aurora">
-+                    Best seller
-+                  </span>
-+                  <div>
-+                    <p class="text-xs uppercase tracking-[0.35em] text-slate-400">NotAnAI Resume</p>
-+                    <p class="mt-3 text-5xl font-semibold text-white">$9.99</p>
-+                    <p class="mt-2 text-sm text-slate-300">Per resume rewrite</p>
-+                  </div>
-+                  <ul class="space-y-4 text-sm text-slate-200">
-+                    <li class="flex items-center gap-3">
-+                      <span class="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-aurora via-pulse to-plasm text-night">
-+                        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-+                          <path d="M5 12l5 5L20 7" />
-+                        </svg>
-+                      </span>
-+                      Delivered within 48 hours
-+                    </li>
-+                    <li class="flex items-center gap-3">
-+                      <span class="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-aurora via-pulse to-plasm text-night">
-+                        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-+                          <path d="M4 21v-7" />
-+                          <path d="M4 10V3" />
-+                          <path d="M12 21V12" />
-+                          <path d="M12 9V3" />
-+                          <path d="M20 21v-5" />
-+                          <path d="M20 12V3" />
-+                        </svg>
-+                      </span>
-+                      ATS-tested formats (PDF, DOCX, TXT)
-+                    </li>
-+                    <li class="flex items-center gap-3">
-+                      <span class="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-aurora via-pulse to-plasm text-night">
-+                        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-+                          <path d="M5 13a4 4 0 0 1 8 0v6" />
-+                          <path d="M5 19h8" />
-+                          <path d="M17 8h4" />
-+                          <path d="M19 6v4" />
-+                        </svg>
-+                      </span>
-+                      Interview follow-up templates included
-+                    </li>
-+                    <li class="flex items-center gap-3">
-+                      <span class="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-aurora via-pulse to-plasm text-night">
-+                        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-+                          <path d="M12 5 4 9l8 4 8-4-8-4Z" />
-+                          <path d="m4 17 8 4 8-4" />
-+                          <path d="m4 13 8 4 8-4" />
-+                        </svg>
-+                      </span>
-+                      Unlimited refinements for 7 days
-+                    </li>
-+                  </ul>
-+                  <a
-+                    href="#contact"
-+                    class="group relative inline-flex items-center justify-center overflow-hidden rounded-full bg-gradient-to-r from-aurora via-pulse to-plasm px-7 py-3 text-sm font-semibold text-night shadow-glow transition hover:-translate-y-[1px]"
-+                  >
-+                    <span class="absolute inset-0 translate-x-[-120%] bg-white/30 opacity-0 transition group-hover:opacity-100">
-+                      <span class="absolute inset-0 animate-shimmer bg-gradient-to-r from-transparent via-white/70 to-transparent"></span>
-+                    </span>
-+                    Reserve my human team
-+                  </a>
-+                </div>
-+              </div>
-+            </div>
-+          </div>
-+        </section>
-+
-+        <section class="relative border-t border-white/5 bg-white/5/40">
-+          <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-aurora/40 to-transparent"></div>
-+          <div class="mx-auto max-w-7xl px-6 py-20 lg:px-12">
-+            <div class="grid gap-12 lg:grid-cols-[1.1fr,0.9fr]">
-+              <div>
-+                <p class="text-xs uppercase tracking-[0.35em] text-aurora">Testimonials</p>
-+                <h2 class="mt-4 text-3xl font-semibold text-white sm:text-4xl">Loved by human-first professionals</h2>
-+                <p class="mt-4 text-base leading-relaxed text-slate-300">
-+                  We’ve partnered with product leaders, designers, marketers, and engineers to deliver resumes that win attention from humans and bots alike.
-+                </p>
-+                <div class="mt-10 grid gap-6 text-sm text-slate-200">
-+                  <div class="rounded-3xl border border-white/10 bg-white/5 p-6">
-+                    <p class="text-lg font-semibold text-white">“It reads like I wrote it.”</p>
-+                    <p class="mt-3 text-slate-300">
-+                      “They interviewed me, captured my wins, and delivered a resume that mirrors my voice. Zero AI sheen, just clarity.”
-+                    </p>
-+                    <p class="mt-4 text-xs uppercase tracking-[0.3em] text-slate-400">Maya R. &mdash; Product Designer</p>
-+                  </div>
-+                  <div class="rounded-3xl border border-white/10 bg-white/5 p-6">
-+                    <p class="text-lg font-semibold text-white">“Recruiters noticed immediately.”</p>
-+                    <p class="mt-3 text-slate-300">
-+                      “My recruiter said it was the most human resume she had seen all month. I booked three interviews in seven days.”
-+                    </p>
-+                    <p class="mt-4 text-xs uppercase tracking-[0.3em] text-slate-400">Steven L. &mdash; Growth Marketer</p>
-+                  </div>
-+                </div>
-+              </div>
-+              <div class="relative rounded-[36px] border border-white/10 bg-night/80 p-10 shadow-glass">
-+                <div class="absolute -inset-6 -z-10 rounded-[42px] bg-gradient-to-br from-aurora/20 via-pulse/25 to-plasm/20 blur-3xl"></div>
-+                <div class="relative space-y-6">
-+                  <div class="flex items-center gap-4">
-+                    <div class="relative h-14 w-14">
-+                      <div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-aurora via-pulse to-plasm blur-sm"></div>
-+                      <div class="relative flex h-full w-full items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-lg font-semibold text-white">
-+                        QA
-+                      </div>
-+                    </div>
-+                    <div>
-+                      <p class="text-sm uppercase tracking-[0.3em] text-aurora">Quality Team</p>
-+                      <p class="text-lg font-semibold text-white">“Real people. Real polish.”</p>
-+                    </div>
-+                  </div>
-+                  <p class="text-sm leading-relaxed text-slate-300">
-+                    “Our reviewers are ex-recruiters from Shopify, Google, and Stripe. We debate phrasing, highlight human nuance, and leave zero AI fingerprints. Think of us as your behind-the-scenes storytellers.”
-+                  </p>
-+                  <div class="grid gap-4 text-xs uppercase tracking-[0.3em] text-slate-400 sm:grid-cols-2">
-+                    <div class="rounded-3xl border border-white/10 bg-white/5 p-4 text-center">
-+                      <p class="text-sm font-semibold text-white">12 person review squad</p>
-+                    </div>
-+                    <div class="rounded-3xl border border-white/10 bg-white/5 p-4 text-center">
-+                      <p class="text-sm font-semibold text-white">Human QA on every resume</p>
-+                    </div>
-+                  </div>
-+                  <a
-+                    href="#contact"
-+                    class="group relative inline-flex items-center justify-center overflow-hidden rounded-full bg-gradient-to-r from-aurora via-pulse to-plasm px-6 py-2.5 text-sm font-semibold text-night shadow-glow transition hover:-translate-y-[1px]"
-+                  >
-+                    <span class="absolute inset-0 translate-x-[-120%] bg-white/30 opacity-0 transition group-hover:opacity-100">
-+                      <span class="absolute inset-0 animate-shimmer bg-gradient-to-r from-transparent via-white/70 to-transparent"></span>
-+                    </span>
-+                    Meet your team
-+                  </a>
-+                </div>
-+              </div>
-+            </div>
-+          </div>
-+        </section>
-+
-+        <section id="contact" class="relative border-t border-white/5">
-+          <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-plasm/40 to-transparent"></div>
-+          <div class="mx-auto max-w-5xl px-6 py-20 text-center lg:px-12">
-+            <span class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-5 py-2 text-xs font-semibold uppercase tracking-[0.4em] text-aurora">
-+              Ready?
-+            </span>
-+            <h2 class="mt-6 text-3xl font-semibold text-white sm:text-4xl">Let’s humanize your resume</h2>
-+            <p class="mt-4 text-base leading-relaxed text-slate-300">
-+              Drop your email and a strategist will reach out within minutes. We’ll schedule your intake call and get to work.
-+            </p>
-+            <form class="mx-auto mt-10 flex flex-col gap-4 text-left sm:flex-row sm:items-center sm:justify-center">
-+              <label class="sr-only" for="email">Email</label>
-+              <input
-+                id="email"
-+                type="email"
-+                required
-+                placeholder="you@domain.com"
-+                class="w-full max-w-md rounded-full border border-white/20 bg-white/10 px-6 py-3 text-sm text-white placeholder:text-slate-400 focus:border-aurora focus:outline-none focus:ring-2 focus:ring-aurora/50"
-+              />
-+              <button
-+                type="submit"
-+                class="group relative inline-flex w-full max-w-[200px] items-center justify-center overflow-hidden rounded-full bg-gradient-to-r from-aurora via-pulse to-plasm px-6 py-3 text-sm font-semibold text-night shadow-glow transition hover:-translate-y-[1px]"
-+              >
-+                <span class="absolute inset-0 translate-x-[-120%] bg-white/30 opacity-0 transition group-hover:opacity-100">
-+                  <span class="absolute inset-0 animate-shimmer bg-gradient-to-r from-transparent via-white/70 to-transparent"></span>
-+                </span>
-+                Start my project
-+              </button>
-+            </form>
-+            <p class="mt-6 text-xs uppercase tracking-[0.3em] text-slate-400">Response time: under 15 minutes</p>
-+          </div>
-+        </section>
-+      </main>
-+
-+      <footer class="border-t border-white/5 bg-night/80">
-+        <div class="mx-auto flex max-w-7xl flex-col gap-6 px-6 py-10 text-sm text-slate-400 lg:flex-row lg:items-center lg:justify-between lg:px-12">
-+          <p>Copyright &copy; 2025 NotAnAI. Crafted by humans, for humans.</p>
-+          <div class="flex flex-wrap items-center gap-6">
-+            <a class="transition hover:text-aurora" href="#pricing">Pricing</a>
-+            <a class="transition hover:text-aurora" href="#contact">Contact</a>
-+            <a class="transition hover:text-aurora" href="#">Terms</a>
-+          </div>
-+        </div>
-+      </footer>
-+    </div>
-+  </body>
-+</html>
- 
-EOF
-)
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>NotAnAI — Human-crafted resumes</title>
+    <meta
+      name="description"
+      content="NotAnAI pairs you with real writers and recruiters who build a resume that sounds like you — and wins interviews."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --night: #040510;
+        --space: #06081b;
+        --mint: #9effd4;
+        --cyan: #74f1ff;
+        --violet: #a78bfa;
+        --slate-100: rgba(248, 250, 252, 0.92);
+        --slate-300: rgba(203, 213, 225, 0.78);
+        --slate-500: rgba(148, 163, 184, 0.7);
+        --white-10: rgba(255, 255, 255, 0.1);
+        --white-5: rgba(255, 255, 255, 0.05);
+        --white-2: rgba(255, 255, 255, 0.02);
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background-color: var(--night);
+        background-image: radial-gradient(circle at 20% -10%, rgba(116, 241, 255, 0.22), transparent 55%),
+          radial-gradient(circle at 90% 0%, rgba(167, 139, 250, 0.28), transparent 60%),
+          linear-gradient(160deg, #040510, #06081b);
+        background-repeat: no-repeat;
+        background-size: cover;
+        color: var(--slate-100);
+        min-height: 100vh;
+        scroll-behavior: smooth;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: -1;
+        background: radial-gradient(circle at 50% 120%, rgba(158, 255, 212, 0.2), transparent 60%);
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      header {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        background: rgba(4, 5, 16, 0.82);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      }
+
+      .container {
+        width: min(1120px, 92vw);
+        margin: 0 auto;
+      }
+
+      .nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 2rem;
+        padding: 1.1rem 0;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 0.9rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        font-size: 0.95rem;
+      }
+
+      .brand span {
+        width: 42px;
+        height: 42px;
+        display: grid;
+        place-items: center;
+        border-radius: 14px;
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(135deg, rgba(158, 255, 212, 0.9), rgba(116, 241, 255, 0.8));
+        color: #041015;
+        font-weight: 800;
+        font-size: 0.8rem;
+      }
+
+      .brand span::after {
+        content: "";
+        position: absolute;
+        top: -40%;
+        right: -40%;
+        bottom: -40%;
+        left: -40%;
+        background: rgba(255, 255, 255, 0.45);
+        transform: rotate(25deg);
+        mix-blend-mode: screen;
+      }
+
+      nav ul {
+        display: flex;
+        gap: clamp(1.2rem, 3vw, 2rem);
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        font-size: 0.92rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--slate-500);
+      }
+
+      nav li a {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding-bottom: 0.25rem;
+        border-bottom: 2px solid transparent;
+        transition: border-color 0.2s, color 0.2s;
+      }
+
+      nav li a:hover {
+        color: var(--mint);
+        border-color: rgba(158, 255, 212, 0.6);
+      }
+
+      .cta-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        border-radius: 999px;
+        padding: 0.7rem 1.4rem;
+        background: linear-gradient(120deg, rgba(116, 241, 255, 0.92), rgba(167, 139, 250, 0.92));
+        color: #051016;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        box-shadow: 0 18px 55px rgba(116, 241, 255, 0.25);
+        transition: transform 0.2s ease, box-shadow 0.3s ease;
+      }
+
+      .cta-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 22px 70px rgba(116, 241, 255, 0.32);
+      }
+
+      main {
+        padding-bottom: 6rem;
+      }
+
+      .hero {
+        display: grid;
+        gap: 3rem;
+        padding: 5.5rem 0 4rem;
+      }
+
+      .hero-grid {
+        display: grid;
+        gap: 2.5rem;
+        grid-template-columns: repeat(12, 1fr);
+        align-items: center;
+      }
+
+      .hero-copy {
+        grid-column: span 7;
+      }
+
+      .hero-copy h1 {
+        font-size: clamp(2.6rem, 4vw, 3.6rem);
+        line-height: 1.12;
+        margin-bottom: 1.6rem;
+      }
+
+      .hero-copy p {
+        font-size: 1.1rem;
+        color: var(--slate-300);
+        margin-bottom: 2rem;
+        max-width: 32rem;
+      }
+
+      .hero-card {
+        grid-column: span 5;
+        padding: 2.3rem;
+        border-radius: 28px;
+        background: rgba(5, 10, 25, 0.85);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0 26px 70px rgba(4, 8, 24, 0.5);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .hero-card::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background: radial-gradient(circle at 18% 12%, rgba(116, 241, 255, 0.25), transparent 55%);
+        opacity: 0.85;
+      }
+
+      .hero-card h2 {
+        position: relative;
+        font-size: 1.4rem;
+        margin-bottom: 1rem;
+      }
+
+      .hero-card p {
+        position: relative;
+        color: var(--slate-300);
+        line-height: 1.6;
+      }
+
+      .pill-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-top: 2.2rem;
+      }
+
+      .pill {
+        font-size: 0.72rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        padding: 0.55rem 1.1rem;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--slate-300);
+      }
+
+      .section-title {
+        font-size: clamp(1.9rem, 3vw, 2.4rem);
+        margin-bottom: 1rem;
+      }
+
+      .section-lead {
+        margin: 0 auto 3rem;
+        max-width: 42rem;
+        color: var(--slate-300);
+        font-size: 1rem;
+      }
+
+      .feature-grid {
+        display: grid;
+        gap: 1.6rem;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      }
+
+      .feature-card {
+        padding: 1.8rem;
+        border-radius: 24px;
+        background: rgba(5, 10, 24, 0.85);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0 18px 55px rgba(5, 10, 24, 0.35);
+      }
+
+      .feature-card span {
+        display: inline-flex;
+        width: 34px;
+        height: 34px;
+        border-radius: 12px;
+        align-items: center;
+        justify-content: center;
+        background: rgba(116, 241, 255, 0.15);
+        color: var(--mint);
+        margin-bottom: 1rem;
+        font-weight: 700;
+        font-size: 0.8rem;
+      }
+
+      .feature-card h3 {
+        margin: 0 0 0.75rem;
+        font-size: 1.1rem;
+      }
+
+      .feature-card p {
+        margin: 0;
+        color: var(--slate-300);
+        line-height: 1.6;
+      }
+
+      .process-grid {
+        display: grid;
+        gap: 1.4rem;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      }
+
+      .process-step {
+        padding: 1.6rem 1.9rem;
+        border-radius: 22px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(4, 9, 22, 0.92);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .process-step::before {
+        content: attr(data-step);
+        position: absolute;
+        top: 1.3rem;
+        right: 1.5rem;
+        font-size: 0.7rem;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.18);
+      }
+
+      .process-step h3 {
+        margin: 0 0 0.8rem;
+      }
+
+      .process-step p {
+        margin: 0;
+        color: var(--slate-300);
+        line-height: 1.6;
+      }
+
+      .comparison {
+        margin-top: 4rem;
+        border-radius: 28px;
+        background: rgba(4, 9, 24, 0.85);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        padding: 2.4rem;
+        display: grid;
+        gap: 2rem;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      }
+
+      .comparison h3 {
+        margin: 0 0 0.6rem;
+      }
+
+      .comparison ul {
+        padding: 0;
+        margin: 0;
+        list-style: none;
+        display: grid;
+        gap: 0.7rem;
+      }
+
+      .comparison li {
+        color: var(--slate-300);
+        display: flex;
+        gap: 0.6rem;
+        align-items: baseline;
+      }
+
+      .comparison li::before {
+        content: "•";
+        color: var(--mint);
+        font-size: 1.2rem;
+        line-height: 1;
+      }
+
+      .testimonials {
+        display: grid;
+        gap: 1.6rem;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        margin-top: 2.5rem;
+      }
+
+      .testimonial-card {
+        padding: 1.8rem;
+        border-radius: 22px;
+        background: rgba(6, 10, 26, 0.88);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        display: grid;
+        gap: 1rem;
+      }
+
+      .testimonial-card p {
+        margin: 0;
+      }
+
+      .testimonial-role {
+        font-size: 0.75rem;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: rgba(116, 241, 255, 0.65);
+      }
+
+      .cta-section {
+        margin: 5rem auto 0;
+        border-radius: 28px;
+        background: linear-gradient(135deg, rgba(5, 11, 28, 0.92), rgba(6, 9, 26, 0.92));
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        padding: 3rem;
+        text-align: center;
+      }
+
+      .cta-section p {
+        margin: 1rem auto 2.2rem;
+        max-width: 40rem;
+        color: var(--slate-300);
+      }
+
+      form {
+        display: grid;
+        gap: 1rem;
+        grid-template-columns: minmax(0, 1fr);
+        justify-items: center;
+      }
+
+      .visually-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+
+      input[type="email"] {
+        width: min(360px, 100%);
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        background: rgba(255, 255, 255, 0.08);
+        padding: 0.85rem 1.3rem;
+        font-size: 0.95rem;
+        color: var(--slate-100);
+        outline: none;
+        transition: border-color 0.2s ease, background 0.2s ease;
+      }
+
+      input[type="email"]::placeholder {
+        color: rgba(200, 215, 235, 0.55);
+      }
+
+      input[type="email"]:focus {
+        border-color: rgba(158, 255, 212, 0.75);
+        background: rgba(255, 255, 255, 0.12);
+      }
+
+      footer {
+        margin-top: 5rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        padding: 2.5rem 0 3rem;
+        background: rgba(4, 6, 20, 0.8);
+      }
+
+      .footer-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.2rem;
+        align-items: center;
+        justify-content: space-between;
+        color: var(--slate-500);
+        font-size: 0.85rem;
+      }
+
+      .footer-links {
+        display: flex;
+        gap: 1.4rem;
+        flex-wrap: wrap;
+      }
+
+      .footer-links a {
+        color: var(--slate-300);
+        font-weight: 500;
+      }
+
+      .footer-links a:hover {
+        color: var(--mint);
+      }
+
+      @media (max-width: 960px) {
+        .hero-grid {
+          grid-template-columns: repeat(1, minmax(0, 1fr));
+        }
+
+        .hero-copy,
+        .hero-card {
+          grid-column: auto;
+        }
+      }
+
+      @media (max-width: 720px) {
+        .nav {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        nav ul {
+          gap: 1rem;
+          flex-wrap: wrap;
+          font-size: 0.8rem;
+        }
+
+        header {
+          position: static;
+        }
+
+        .hero {
+          padding-top: 3.5rem;
+        }
+
+        form {
+          width: 100%;
+        }
+
+        input[type="email"],
+        .cta-button {
+          width: 100%;
+        }
+
+        .cta-section {
+          padding: 2.4rem 1.8rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <div class="nav">
+          <a class="brand" href="#home">
+            <span>NA</span>
+            NotAnAI Collective
+          </a>
+          <nav>
+            <ul>
+              <li><a href="#home">Home</a></li>
+              <li><a href="#services">Services</a></li>
+              <li><a href="#process">Process</a></li>
+              <li><a href="#proof">Proof</a></li>
+              <li><a href="#contact">Start</a></li>
+            </ul>
+          </nav>
+          <a class="cta-button" href="#contact">Start my project</a>
+        </div>
+      </div>
+    </header>
+
+    <main id="home">
+      <section class="container hero">
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <p class="pill" style="margin: 0 0 1.4rem; display: inline-flex">Human-crafted resumes</p>
+            <h1>Resumes written by humans who know how to impress humans.</h1>
+            <p>
+              NotAnAI pairs you with a strategist, writer, and reviewer that shape your story into a resume recruiters trust.
+              No robotic filler, no templates—just the kind of narrative that turns scanners into interviews.
+            </p>
+            <div class="pill-group">
+              <span class="pill">ATS-safe copy</span>
+              <span class="pill">Story-first strategy</span>
+              <span class="pill">48h kickoff</span>
+            </div>
+            <div style="margin-top: 2.4rem; display: flex; gap: 1rem; flex-wrap: wrap">
+              <a class="cta-button" href="#contact">Book my intake call</a>
+              <a style="color: var(--mint); font-weight: 600" href="#proof">See our wins →</a>
+            </div>
+          </div>
+          <aside class="hero-card">
+            <h2>Real recruiters, real writers</h2>
+            <p>
+              Every resume goes through a three-person panel made of former FAANG recruiters and agency storytellers. We audit
+              tone, clarity, and keyword balance without losing your voice.
+            </p>
+            <div class="pill-group">
+              <span class="pill">Interview surge: 3.7×</span>
+              <span class="pill">Avg. turnaround: 5 days</span>
+              <span class="pill">Unlimited revisions</span>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section id="services" class="container" style="margin-top: 5rem">
+        <h2 class="section-title">What you get with NotAnAI</h2>
+        <p class="section-lead">
+          We blend human storytelling with modern tooling so your resume reads like you—and reaches the top of the stack.
+        </p>
+        <div class="feature-grid">
+          <article class="feature-card">
+            <span>01</span>
+            <h3>Strategy intake</h3>
+            <p>
+              We interview you for the wins that matter. Expect deep questions, industry research, and a narrative arc tailored
+              to your next role.
+            </p>
+          </article>
+          <article class="feature-card">
+            <span>02</span>
+            <h3>Human-led writing</h3>
+            <p>
+              A dedicated writer distills your experience into high-impact bullets calibrated for recruiters, not algorithms.
+            </p>
+          </article>
+          <article class="feature-card">
+            <span>03</span>
+            <h3>Expert review table</h3>
+            <p>
+              Three former hiring managers battle over every line until the copy sounds natural, polished, and unmistakably
+              yours.
+            </p>
+          </article>
+          <article class="feature-card">
+            <span>04</span>
+            <h3>ATS calibration</h3>
+            <p>
+              We run human QA with ATS tools to ensure keywords land without falling into AI-sounding fluff.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section id="process" class="container" style="margin-top: 5.5rem">
+        <h2 class="section-title">Our five-day collaboration</h2>
+        <p class="section-lead">
+          A streamlined process that keeps you in the loop while the team polishes every detail.
+        </p>
+        <div class="process-grid">
+          <article class="process-step" data-step="Day 0">
+            <h3>Kickoff call</h3>
+            <p>Meet your squad, outline target roles, and align on voice, wins, and red lines.</p>
+          </article>
+          <article class="process-step" data-step="Day 1">
+            <h3>Story mining</h3>
+            <p>We draft narratives and bullet frameworks, then message you for clarifications.</p>
+          </article>
+          <article class="process-step" data-step="Day 3">
+            <h3>Writing sprint</h3>
+            <p>Full resume build with quantified outcomes, keywords, and tonal guardrails.</p>
+          </article>
+          <article class="process-step" data-step="Day 4">
+            <h3>Review panel</h3>
+            <p>Recruiters stress test the copy, align formatting, and prepare alternatives.</p>
+          </article>
+          <article class="process-step" data-step="Day 5">
+            <h3>Delivery & polish</h3>
+            <p>Receive editable files, tailored cover letter language, and interview talking points.</p>
+          </article>
+        </div>
+
+        <div class="comparison">
+          <div>
+            <h3>NotAnAI</h3>
+            <ul>
+              <li>Interview wins increase 3.7× on average.</li>
+              <li>Unlimited revisions for 30 days.</li>
+              <li>Voice-first copy crafted by real writers.</li>
+            </ul>
+          </div>
+          <div>
+            <h3>Template services</h3>
+            <ul>
+              <li>Generic bullet banks reused across roles.</li>
+              <li>One-size-fits-all formatting.</li>
+              <li>No insight into what recruiters actually want.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="proof" class="container" style="margin-top: 5.5rem">
+        <h2 class="section-title">Proof that it works</h2>
+        <p class="section-lead">
+          These humans trusted NotAnAI to help them show up fully. The result: more callbacks, faster offers, and resumes that
+          sound like them.
+        </p>
+        <div class="testimonials">
+          <article class="testimonial-card">
+            <p class="testimonial-role">Director of Product • Series B SaaS</p>
+            <p>
+              “My resume finally reads like the leader I am. The team pulled details I had forgotten and framed them like a
+              compelling narrative. Three interviews booked in the first week.”
+            </p>
+            <p style="color: var(--slate-500)">— Maya R.</p>
+          </article>
+          <article class="testimonial-card">
+            <p class="testimonial-role">Staff Engineer • Cloud Infrastructure</p>
+            <p>
+              “They translated deeply technical achievements into outcomes business stakeholders understand. I sound like myself,
+              but sharper.”
+            </p>
+            <p style="color: var(--slate-500)">— Alex D.</p>
+          </article>
+          <article class="testimonial-card">
+            <p class="testimonial-role">Head of Growth • DTC Marketplace</p>
+            <p>
+              “No AI overtones, just a confident narrative. Recruiters commented on how refreshing it felt. Offer landed in 12
+              days.”
+            </p>
+            <p style="color: var(--slate-500)">— Steven L.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="contact" class="container" style="margin-top: 5.5rem">
+        <div class="cta-section">
+          <h2 class="section-title" style="margin-bottom: 0.6rem">Ready to sound unmistakably human?</h2>
+          <p>
+            Drop your email and our strategist will follow up within 15 minutes. We’ll schedule your intake call and start
+            shaping your story.
+          </p>
+          <form>
+            <label for="email" class="visually-hidden">Email</label>
+            <input id="email" name="email" type="email" placeholder="you@domain.com" required />
+            <button class="cta-button" type="submit">Start my project</button>
+          </form>
+          <p style="margin-top: 1.5rem; font-size: 0.75rem; letter-spacing: 0.28em; text-transform: uppercase; color: rgba(158, 255, 212, 0.7)">
+            Response time: under 15 minutes
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="container footer-grid">
+        <p>© 2025 NotAnAI Collective. Crafted by humans, for humans.</p>
+        <div class="footer-links">
+          <a href="#services">Services</a>
+          <a href="#process">Process</a>
+          <a href="#proof">Proof</a>
+          <a href="#contact">Start</a>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
