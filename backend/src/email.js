@@ -18,8 +18,15 @@ function logEmail(to, subject, body) {
 
 function notifySales(request) {
   const subject = `New member onboarding request — ${request.fullName}`;
-  const body = `Membership: ${request.membershipPlan}\nEmail: ${request.email}\nPhone: ${request.phone}\nDesired role: ${request.desiredRole}\nAttributes: ${request.jobAttributes}\nNotes: ${request.projectNotes}\nOrder ID: ${request.orderId}`;
+  const membershipLine = request.membershipPlan ? request.membershipPlan : 'Membership plan pending';
+  const body = `Membership: ${membershipLine}\nEmail: ${request.email}\nPhone: ${request.phone}\nDesired role: ${request.desiredRole}\nAttributes: ${request.jobAttributes}\nNotes: ${request.projectNotes}\nOrder ID: ${request.orderId}`;
   logEmail('sale@notanai.ca', subject, body);
+}
+
+function sendWelcome(request) {
+  const subject = `Welcome to NotAnAI — account #${request.orderId}`;
+  const body = `Hi ${request.fullName},\n\nYour NotAnAI member account is ready. Sign in to the member portal to choose the membership tier that best fits your goals, finalize secure payment, and follow project updates.\n\nPortal: ${request.portalUrl}\n\nThank you for trusting us with your career story.\n\n— NotAnAI Member Success`;
+  logEmail(request.email, subject, body);
 }
 
 function sendMemberReceipt(request) {
@@ -30,5 +37,6 @@ function sendMemberReceipt(request) {
 
 module.exports = {
   notifySales,
+  sendWelcome,
   sendMemberReceipt,
 };

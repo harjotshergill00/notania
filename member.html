@@ -265,6 +265,32 @@
         flex-wrap: wrap;
       }
 
+      .plan-actions {
+        margin-top: 0.75rem;
+        display: grid;
+        gap: 0.6rem;
+      }
+
+      .plan-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+
+      .plan-buttons button {
+        flex: 1 1 160px;
+      }
+
+      .checkout-note {
+        margin-top: 0.6rem;
+        font-size: 0.8rem;
+        color: var(--muted);
+      }
+
+      .resume-link {
+        margin-top: 0.75rem;
+      }
+
       @media (max-width: 720px) {
         th,
         td {
@@ -422,16 +448,50 @@
         contactLine.textContent = `${profile.email} • ${profile.phone || "No phone on file"}`;
       }
 
+      const MEMBERSHIP_PLANS = {
+        starter: { label: "Starter Package", shortLabel: "Starter", amountCents: 19900 },
+        accelerator: { label: "Career Accelerator", shortLabel: "Accelerator", amountCents: 32900 },
+        executive: { label: "Executive Spotlight", shortLabel: "Executive", amountCents: 52900 },
+      };
+
+      function formatCurrency(cents) {
+        return `$${(cents / 100).toFixed(2)}`;
+      }
+
       function statusTag(status) {
         return `<span class="status-tag">${status.replace(/_/g, " ")}</span>`;
       }
 
-      function paymentSummary(transaction) {
-        if (!transaction) {
-          return "Pending payment setup.";
+      function paymentSummary(order) {
+        if (!order.membership_plan) {
+          return "Membership selection required.";
         }
-        const amount = (transaction.amount_cents / 100).toFixed(2);
-        return `${transaction.status.toUpperCase()} • $${amount}`;
+        if (!order.transaction) {
+          return "Checkout not started.";
+        }
+        const amount = formatCurrency(order.transaction.amount_cents);
+        const statusLabel = order.transaction.status
+          ? order.transaction.status.replace(/_/g, " ").toUpperCase()
+          : "PENDING";
+        return `${statusLabel} • ${amount}`;
+      }
+
+      function renderPlanPicker(orderId) {
+        const buttons = Object.entries(MEMBERSHIP_PLANS)
+          .map(([key, plan]) => {
+            const shortLabel = plan.shortLabel || plan.label;
+            const amountLabel = formatCurrency(plan.amountCents);
+            return `<button class="btn-primary" type="button" data-plan="${key}" data-order="${orderId}">${shortLabel} — ${amountLabel}</button>`;
+          })
+          .join("");
+        return `
+          <div class="plan-actions" data-plan-picker="${orderId}">
+            <p>Select your membership tier to unlock checkout:</p>
+            <div class="plan-buttons">
+              ${buttons}
+            </div>
+          </div>
+        `;
       }
 
       function renderOrders(orders, token) {
@@ -451,13 +511,33 @@
             ? `/api/members/orders/${order.id}/resume?token=${encodeURIComponent(token)}`
             : null;
           const paymentPaid = order.transaction?.status === "paid";
-          const amount = order.transaction ? (order.transaction.amount_cents / 100).toFixed(2) : null;
+          const membershipLabel = order.membership_plan_label || "Plan pending";
+
+          const actionBlocks = [];
+          if (!order.membership_plan) {
+            actionBlocks.push(renderPlanPicker(order.id));
+          } else if (!paymentPaid) {
+            actionBlocks.push(`<button class="btn-primary" type="button" data-checkout="${order.id}">Start secure checkout</button>`);
+            actionBlocks.push(
+              `<p class="checkout-note">Checkout opens in a new browser tab using Stripe. Complete payment to notify our specialists.</p>`
+            );
+            if (order.transaction) {
+              actionBlocks.push(
+                `<button class="btn-ghost" type="button" data-record="${order.id}">Record payment manually (team use)</button>`
+              );
+            }
+          }
+
+          const resumeMarkup = resumeLink
+            ? `<a class="link-button btn-ghost" href="${resumeLink}" target="_blank" rel="noopener">Download uploaded resume</a>`
+            : "Resume upload pending";
+
           row.innerHTML = `
             <td>
               <strong>#${order.id}</strong><br />
               ${statusTag(order.status)}<br />
               <small>Created ${created}</small><br />
-              <small>${order.membership_plan.replace(/_/g, " ")}</small>
+              <small>${membershipLabel}</small>
             </td>
             <td>
               <div><strong>Desired role:</strong> ${order.desired_role || "—"}</div>
@@ -465,19 +545,9 @@
               <div><strong>Project notes:</strong> ${order.project_notes || "—"}</div>
             </td>
             <td>
-              <div>${paymentSummary(order.transaction)}</div>
-              ${
-                paymentPaid
-                  ? ""
-                  : `<button class="btn-primary" type="button" data-pay="${order.id}" data-amount="${amount || ""}">Complete payment</button>`
-              }
-              <div style="margin-top: 0.75rem;">
-                ${
-                  resumeLink
-                    ? `<a class="link-button btn-ghost" href="${resumeLink}" target="_blank" rel="noopener">Download uploaded resume</a>`
-                    : "Resume upload pending"
-                }
-              </div>
+              <div>${paymentSummary(order)}</div>
+              ${actionBlocks.join("")}
+              <div class="resume-link">${resumeMarkup}</div>
             </td>
           `;
           ordersBody.appendChild(row);
@@ -573,27 +643,99 @@
         }
       }
 
-      async function completePayment(orderId, amount) {
+      async function selectPlan(orderId, membershipPlan) {
+        const token = getToken();
+        if (!token) {
+          showLogin("Your session expired. Please sign in again.");
+          return;
+        }
+
+        try {
+          const response = await fetch(`/api/members/orders/${orderId}/plan`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({ membershipPlan }),
+          });
+
+          if (!response.ok) {
+            const error = await response.json().catch(() => ({ message: "Unable to save membership plan." }));
+            throw new Error(error.message || "Unable to save membership plan.");
+          }
+
+          const data = await response.json();
+          renderOrders(data.orders || [], token);
+          const planLabel = MEMBERSHIP_PLANS[membershipPlan]?.label || membershipPlan;
+          showAlert(`Saved your ${planLabel} membership. Start secure checkout when you are ready.`);
+        } catch (error) {
+          showAlert(error.message || "Unable to save membership plan.", true);
+        }
+      }
+
+      async function startCheckout(orderId) {
+        const token = getToken();
+        if (!token) {
+          showLogin("Your session expired. Please sign in again.");
+          return;
+        }
+
+        try {
+          const response = await fetch(`/api/members/orders/${orderId}/checkout`, {
+            method: "POST",
+            headers: { Authorization: `Bearer ${token}` },
+          });
+
+          if (response.status === 501) {
+            const info = await response.json().catch(() => ({}));
+            const message =
+              info.message ||
+              "Stripe is not configured. Set STRIPE_SECRET_KEY and SITE_URL environment variables on the server.";
+            showAlert(message, true);
+            if (info.documentation) {
+              console.info("Stripe checkout documentation:", info.documentation);
+            }
+            return;
+          }
+
+          if (!response.ok) {
+            const error = await response.json().catch(() => ({ message: "Unable to start checkout session." }));
+            throw new Error(error.message || "Unable to start checkout session.");
+          }
+
+          const data = await response.json();
+          if (data.checkoutUrl) {
+            window.open(data.checkoutUrl, "_blank", "noopener");
+            showAlert("Stripe checkout opened in a new tab. Complete payment to notify our team.");
+          } else {
+            showAlert("Checkout session created. Follow the Stripe link to continue.", true);
+          }
+        } catch (error) {
+          showAlert(error.message || "Unable to start checkout session.", true);
+        }
+      }
+
+      async function recordPayment(orderId) {
         try {
           const response = await fetch(`/api/orders/${orderId}/pay`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-              reference: `MEM-${orderId}-${Date.now()}`,
-              method: "card",
+              reference: `MANUAL-${orderId}-${Date.now()}`,
+              method: "manual",
             }),
           });
 
           if (!response.ok) {
-            const error = await response.json().catch(() => ({ message: "Payment failed." }));
-            throw new Error(error.message || "Payment failed.");
+            const error = await response.json().catch(() => ({ message: "Unable to record payment." }));
+            throw new Error(error.message || "Unable to record payment.");
           }
 
           await fetchOrders(false);
-          const amountLabel = amount ? `$${amount}` : "membership";
-          showAlert(`Payment confirmed for ${amountLabel}. Your specialists have been notified.`);
+          showAlert("Payment recorded. Our specialists have been notified.");
         } catch (error) {
-          showAlert(error.message || "Unable to complete payment.", true);
+          showAlert(error.message || "Unable to record payment.", true);
         }
       }
 
@@ -610,17 +752,53 @@
       });
 
       ordersBody.addEventListener("click", (event) => {
-        const payButton = event.target.closest("[data-pay]");
-        if (!payButton) return;
-        const orderId = payButton.dataset.pay;
-        const amount = payButton.dataset.amount;
-        const originalText = payButton.textContent;
-        payButton.disabled = true;
-        payButton.textContent = "Processing...";
-        completePayment(orderId, amount).finally(() => {
-          payButton.disabled = false;
-          payButton.textContent = originalText;
-        });
+        const planButton = event.target.closest("[data-plan]");
+        if (planButton) {
+          const orderId = planButton.dataset.order;
+          const planKey = planButton.dataset.plan;
+          if (!orderId || !planKey) {
+            return;
+          }
+          const originalText = planButton.textContent;
+          planButton.disabled = true;
+          planButton.textContent = "Saving...";
+          selectPlan(orderId, planKey).finally(() => {
+            planButton.disabled = false;
+            planButton.textContent = originalText;
+          });
+          return;
+        }
+
+        const checkoutButton = event.target.closest("[data-checkout]");
+        if (checkoutButton) {
+          const orderId = checkoutButton.dataset.checkout;
+          if (!orderId) {
+            return;
+          }
+          const originalText = checkoutButton.textContent;
+          checkoutButton.disabled = true;
+          checkoutButton.textContent = "Preparing...";
+          startCheckout(orderId).finally(() => {
+            checkoutButton.disabled = false;
+            checkoutButton.textContent = originalText;
+          });
+          return;
+        }
+
+        const recordButton = event.target.closest("[data-record]");
+        if (recordButton) {
+          const orderId = recordButton.dataset.record;
+          if (!orderId) {
+            return;
+          }
+          const originalText = recordButton.textContent;
+          recordButton.disabled = true;
+          recordButton.textContent = "Recording...";
+          recordPayment(orderId).finally(() => {
+            recordButton.disabled = false;
+            recordButton.textContent = originalText;
+          });
+        }
       });
 
       document.addEventListener("DOMContentLoaded", () => {

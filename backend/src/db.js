@@ -146,7 +146,7 @@ function insertOrder({ userId, resumeId, membershipPlan, status, desiredRole, jo
     id: nextId('orders'),
     user_id: userId,
     resume_id: resumeId,
-    membership_plan: membershipPlan,
+    membership_plan: membershipPlan || null,
     status: status || 'intake',
     desired_role: desiredRole || '',
     job_attributes: jobAttributes || '',
@@ -155,6 +155,14 @@ function insertOrder({ userId, resumeId, membershipPlan, status, desiredRole, jo
     updated_at: timestamp,
   };
   state.orders.push(order);
+  persist();
+  return order;
+}
+
+function updateOrder(id, updates) {
+  const order = state.orders.find((item) => item.id === Number(id));
+  if (!order) return null;
+  Object.assign(order, updates, { updated_at: new Date().toISOString() });
   persist();
   return order;
 }
@@ -235,12 +243,14 @@ module.exports = {
   upsertUser,
   insertResume,
   insertOrder,
+  updateOrder,
   insertTransaction,
   updateTransaction,
   updateOrderStatus,
   getOrderById,
   getResumeById,
   getLatestTransaction,
+  getUserById,
   getUserByEmail,
   listOrders,
   listOrdersForUser,

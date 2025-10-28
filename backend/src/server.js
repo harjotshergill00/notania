@@ -8,12 +8,14 @@ const {
   upsertUser,
   insertResume,
   insertOrder,
+  updateOrder,
   insertTransaction,
   updateTransaction,
   updateOrderStatus,
   getOrderById,
   getResumeById,
   getLatestTransaction,
+  getUserById,
   listOrders,
   listOrdersForUser,
   getUserByEmail,
@@ -29,6 +31,15 @@ const {
 
 const app = express();
 const PORT = process.env.PORT || 4000;
+const SITE_URL = process.env.SITE_URL || `http://localhost:${PORT}`;
+
+let stripeClient = null;
+if (process.env.STRIPE_SECRET_KEY) {
+  const Stripe = require('stripe');
+  stripeClient = new Stripe(process.env.STRIPE_SECRET_KEY, {
+    apiVersion: '2023-10-16',
+  });
+}
 
 const uploadsDir = path.join(__dirname, '..', 'uploads');
 if (!fs.existsSync(uploadsDir)) {
@@ -60,7 +71,7 @@ function getPlan(planKey) {
   return MEMBERSHIP_PLANS[planKey] || MEMBERSHIP_PLANS.starter;
 }
 
-function buildOnboardingResponse({ user, resume, order, transaction }) {
+function buildOnboardingResponse({ user, resume, order, transaction = null }) {
   return {
     user: {
       id: user.id,
@@ -77,11 +88,13 @@ function buildOnboardingResponse({ user, resume, order, transaction }) {
       membershipPlan: order.membership_plan,
       status: order.status,
     },
-    transaction: {
-      id: transaction.id,
-      amountCents: transaction.amount_cents,
-      status: transaction.status,
-    },
+    transaction: transaction
+      ? {
+          id: transaction.id,
+          amountCents: transaction.amount_cents,
+          status: transaction.status,
+        }
+      : null,
   };
 }
 
@@ -89,6 +102,9 @@ function formatMemberOrders(orderBundles) {
   return orderBundles.map(({ order, resume, transaction }) => ({
     id: order.id,
     membership_plan: order.membership_plan,
+    membership_plan_label: order.membership_plan
+      ? order.membership_plan.replace(/_/g, ' ')
+      : 'Plan pending',
     status: order.status,
     created_at: order.created_at,
     desired_role: order.desired_role,
@@ -114,8 +130,6 @@ app.post('/api/onboarding', upload.single('resume'), (req, res) => {
       desiredRole,
       jobAttributes,
       projectNotes,
-      membershipPlan,
-      membershipAmount,
       sendSalesCopy,
       agreeTerms,
     } = req.body;
@@ -132,9 +146,6 @@ app.post('/api/onboarding', upload.single('resume'), (req, res) => {
       return res.status(400).json({ message: 'Resume upload is required.' });
     }
 
-    const plan = getPlan(membershipPlan);
-    const amountCents = Number(membershipAmount) || plan.amountCents;
-
     const passwordHash = bcrypt.hashSync(password, 10);
     const user = upsertUser({ fullName, email, phone, passwordHash });
     const resume = insertResume({
@@ -147,29 +158,22 @@ app.post('/api/onboarding', upload.single('resume'), (req, res) => {
     const order = insertOrder({
       userId: user.id,
       resumeId: resume.id,
-      membershipPlan: membershipPlan || 'starter',
-      status: 'intake',
+      membershipPlan: null,
+      status: 'awaiting_plan',
       desiredRole,
       jobAttributes,
       projectNotes,
     });
-    const transaction = insertTransaction({
-      orderId: order.id,
-      amountCents,
-      status: 'pending',
-      processor: 'internal',
-      reference: `PENDING-${order.id}-${Date.now()}`,
-    });
 
-    const response = buildOnboardingResponse({ user, resume, order, transaction });
+    const response = buildOnboardingResponse({ user, resume, order });
     const authToken = createMemberToken(user.id);
     const orders = formatMemberOrders(listOrdersForUser(user.id));
 
-    emailService.sendMemberReceipt({
+    emailService.sendWelcome({
       fullName,
       email,
-      membershipPlan: response.order.membershipPlan,
       orderId: response.order.id,
+      portalUrl: `${SITE_URL}/member.html`,
     });
 
     if (sendSalesCopy) {
@@ -177,7 +181,7 @@ app.post('/api/onboarding', upload.single('resume'), (req, res) => {
         fullName,
         email,
         phone,
-        membershipPlan: response.order.membershipPlan,
+        membershipPlan: null,
         desiredRole,
         jobAttributes,
         projectNotes,
@@ -210,6 +214,10 @@ app.post('/api/orders/:orderId/pay', (req, res) => {
       return res.status(404).json({ message: 'Order not found.' });
     }
 
+    if (!order.membership_plan) {
+      return res.status(400).json({ message: 'A membership plan must be selected before recording payment.' });
+    }
+
     const latestTransaction = getLatestTransaction(orderId);
     if (!latestTransaction) {
       return res.status(404).json({ message: 'Transaction not found.' });
@@ -227,10 +235,73 @@ app.post('/api/orders/:orderId/pay', (req, res) => {
 
     const updatedOrder = updateOrderStatus(orderId, 'payment_received');
 
+    const user = getUserById(updatedOrder.user_id);
+    if (user) {
+      emailService.sendMemberReceipt({
+        fullName: user.full_name,
+        email: user.email,
+        membershipPlan: updatedOrder.membership_plan || 'NotAnAI membership',
+        orderId: updatedOrder.id,
+      });
+    }
+
     return res.json({ order: updatedOrder, transaction });
   } catch (error) {
     console.error('Payment error', error);
     return res.status(500).json({ message: 'Unable to process payment.' });
+  }
+});
+
+app.post('/api/members/orders/:orderId/checkout', requireMember, async (req, res) => {
+  try {
+    const { orderId } = req.params;
+
+    if (!stripeClient) {
+      return res.status(501).json({
+        message: 'Stripe is not configured. Add STRIPE_SECRET_KEY and SITE_URL environment variables to enable hosted checkout.',
+        documentation:
+          'https://stripe.com/docs/payments/checkout/accept-a-payment?platform=web&ui=checkout#server-create-session',
+      });
+    }
+
+    const bundles = listOrdersForUser(req.member.userId);
+    const bundle = bundles.find(({ order }) => order.id === Number(orderId));
+    if (!bundle) {
+      return res.status(404).json({ message: 'Order not found.' });
+    }
+
+    if (!bundle.order.membership_plan) {
+      return res.status(400).json({ message: 'Select a membership plan before starting checkout.' });
+    }
+
+    const plan = getPlan(bundle.order.membership_plan);
+    const session = await stripeClient.checkout.sessions.create({
+      mode: 'payment',
+      customer_email: bundle.user?.email,
+      line_items: [
+        {
+          price_data: {
+            currency: 'cad',
+            product_data: {
+              name: `NotAnAI Membership — ${bundle.order.membership_plan.replace(/_/g, ' ')}`,
+            },
+            unit_amount: plan.amountCents,
+          },
+          quantity: 1,
+        },
+      ],
+      metadata: {
+        order_id: String(bundle.order.id),
+        user_id: String(req.member.userId),
+      },
+      success_url: `${SITE_URL}/member.html?order=${bundle.order.id}&checkout=success`,
+      cancel_url: `${SITE_URL}/member.html?order=${bundle.order.id}&checkout=cancelled`,
+    });
+
+    return res.json({ checkoutUrl: session.url });
+  } catch (error) {
+    console.error('Stripe checkout error', error);
+    return res.status(500).json({ message: 'Unable to start checkout session.' });
   }
 });
 
@@ -283,6 +354,57 @@ app.post('/api/auth/login', (req, res) => {
   } catch (error) {
     console.error('Member login error', error);
     return res.status(500).json({ message: 'Unable to complete login request.' });
+  }
+});
+
+app.post('/api/members/orders/:orderId/plan', requireMember, (req, res) => {
+  try {
+    const { orderId } = req.params;
+    const { membershipPlan } = req.body || {};
+
+    if (!membershipPlan || !MEMBERSHIP_PLANS[membershipPlan]) {
+      return res.status(400).json({ message: 'Select a valid membership plan before continuing.' });
+    }
+
+    const bundles = listOrdersForUser(req.member.userId);
+    const bundle = bundles.find(({ order }) => order.id === Number(orderId));
+    if (!bundle) {
+      return res.status(404).json({ message: 'Order not found.' });
+    }
+
+    const plan = getPlan(membershipPlan);
+    const updatedOrder = updateOrder(orderId, {
+      membership_plan: membershipPlan,
+      status: 'awaiting_payment',
+    });
+
+    let transaction = getLatestTransaction(orderId);
+    if (transaction && transaction.status !== 'paid') {
+      transaction = updateTransaction(transaction.id, {
+        amount_cents: plan.amountCents,
+        status: 'pending',
+        processor: 'stripe',
+        reference: transaction.reference || `STRIPE-${orderId}-${Date.now()}`,
+      });
+    }
+
+    if (!transaction) {
+      transaction = insertTransaction({
+        orderId: updatedOrder.id,
+        amountCents: plan.amountCents,
+        status: 'pending',
+        processor: 'stripe',
+        reference: `STRIPE-${orderId}-${Date.now()}`,
+      });
+    }
+
+    const orders = formatMemberOrders(listOrdersForUser(req.member.userId));
+    const current = orders.find((item) => item.id === Number(orderId));
+
+    return res.json({ order: current, orders });
+  } catch (error) {
+    console.error('Member plan selection error', error);
+    return res.status(500).json({ message: 'Unable to save membership plan.' });
   }
 });
 
@@ -349,6 +471,8 @@ app.get('/api/members/orders/:orderId/resume', requireMember, (req, res) => {
 });
 
 const ALLOWED_STATUSES = new Set([
+  'awaiting_plan',
+  'awaiting_payment',
   'intake',
   'payment_received',
   'in_progress',

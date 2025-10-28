@@ -281,29 +281,12 @@
         transition: border-color 0.2s, transform 0.2s;
         display: grid;
         gap: 0.6rem;
-        cursor: pointer;
-        position: relative;
       }
 
       .membership-option:hover,
-      .membership-option:focus-within {
+      .membership-option:focus-visible {
         border-color: rgba(127, 116, 255, 0.5);
         transform: translateY(-2px);
-      }
-
-      .membership-option[data-selected="true"] {
-        border-color: rgba(103, 247, 196, 0.7);
-        box-shadow: 0 18px 35px rgba(103, 247, 196, 0.18);
-      }
-
-      .membership-option input[type="radio"] {
-        position: absolute;
-        opacity: 0;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        pointer-events: none;
       }
 
       .membership-option__label {
@@ -428,7 +411,8 @@
         gap: 1rem;
       }
 
-      .status-actions button {
+      .status-actions button,
+      .status-actions a {
         border: 0;
         border-radius: 999px;
         padding: 0.75rem 1.5rem;
@@ -436,6 +420,7 @@
         letter-spacing: 0.06em;
         text-transform: uppercase;
         cursor: pointer;
+        text-decoration: none;
       }
 
       .status-actions .primary {
@@ -585,65 +570,43 @@
             <div class="card" id="membership">
               <h3>Membership plans</h3>
               <p>Choose the package that best fits your goals. Every plan includes a dedicated specialist and delivery in 5 business days.</p>
-              <div class="membership-picker" role="radiogroup" aria-label="Membership plans">
-                <div class="membership-option" data-plan="starter" data-amount="19900" data-selected="true">
-                  <input
-                    type="radio"
-                    name="membershipChoice"
-                    id="plan-starter"
-                    value="starter"
-                    data-amount="19900"
-                    checked
-                  />
-                  <label class="membership-option__label" for="plan-starter">
+              <div class="membership-picker" aria-label="Membership plans">
+                <div class="membership-option">
+                  <div class="membership-option__label">
                     <span>
                       <strong>Starter Package</strong>
                       <span class="brand-tagline">Early-career professionals and career changers</span>
                     </span>
                     <span class="membership-price">$199</span>
-                  </label>
+                  </div>
                   <ul class="membership-option__list">
                     <li>1:1 intake interview</li>
                     <li>Resume + tailored cover letter</li>
                     <li>Email recap for you and sale@notanai.ca</li>
                   </ul>
                 </div>
-                <div class="membership-option" data-plan="accelerator" data-amount="32900">
-                  <input
-                    type="radio"
-                    name="membershipChoice"
-                    id="plan-accelerator"
-                    value="accelerator"
-                    data-amount="32900"
-                  />
-                  <label class="membership-option__label" for="plan-accelerator">
+                <div class="membership-option">
+                  <div class="membership-option__label">
                     <span>
                       <strong>Career Accelerator</strong>
                       <span class="brand-tagline">Managers and experienced specialists re-entering the market</span>
                     </span>
                     <span class="membership-price">$329</span>
-                  </label>
+                  </div>
                   <ul class="membership-option__list">
                     <li>Strategic positioning call</li>
                     <li>Resume, cover letter, LinkedIn polish</li>
                     <li>Priority turnaround within 72 hours</li>
                   </ul>
                 </div>
-                <div class="membership-option" data-plan="executive" data-amount="52900">
-                  <input
-                    type="radio"
-                    name="membershipChoice"
-                    id="plan-executive"
-                    value="executive"
-                    data-amount="52900"
-                  />
-                  <label class="membership-option__label" for="plan-executive">
+                <div class="membership-option">
+                  <div class="membership-option__label">
                     <span>
                       <strong>Executive Spotlight</strong>
                       <span class="brand-tagline">Directors, vice presidents, and C-suite leaders</span>
                     </span>
                     <span class="membership-price">$529</span>
-                  </label>
+                  </div>
                   <ul class="membership-option__list">
                     <li>Leadership narrative workshop</li>
                     <li>Resume, board bio, networking pitch</li>
@@ -671,16 +634,15 @@
             <span class="process-index">2</span>
             <div>
               <h3>Establish your account</h3>
-              <p>Complete the onboarding form, upload your current resume, and select the membership that aligns with your
-                objectives.</p>
+              <p>Complete the onboarding form, upload your current resume, and receive secure credentials for the member portal.</p>
             </div>
           </div>
           <div class="card process-step">
             <span class="process-index">3</span>
             <div>
-              <h3>Confirm membership payment</h3>
-              <p>Submit the membership fee through our secure checkout. We confirm the transaction and assign your specialist
-                team.</p>
+              <h3>Choose your membership</h3>
+              <p>Sign in to the member portal, select the ideal membership tier, and launch checkout through our Stripe-powered
+                payment link.</p>
             </div>
           </div>
           <div class="card process-step">
@@ -696,10 +658,8 @@
 
       <section class="container onboarding-section" id="join">
         <h2 class="section-title">Create your NotAnAI member account</h2>
-        <p class="form-note">Complete the secure form below to open your account, alert sale@notanai.ca when requested, and store your resume in our fulfillment repository.</p>
+        <p class="form-note">Complete the secure form below to open your account, alert sale@notanai.ca when requested, and store your resume in our fulfillment repository. After submission you will receive instructions to sign in, choose a membership tier, and finalize payment in the member portal.</p>
         <form id="onboarding-form" enctype="multipart/form-data" novalidate>
-          <input type="hidden" name="membershipPlan" id="membershipPlan" value="starter" />
-          <input type="hidden" name="membershipAmount" id="membershipAmount" value="19900" />
           <div class="form-grid">
             <label>
               Full name
@@ -752,7 +712,7 @@
           </label>
           <label>
             <input type="checkbox" name="agreeTerms" value="yes" required />
-            I agree to the NotAnAI membership terms and authorize the membership payment described above.
+            I agree to the NotAnAI membership terms and authorize payment for the membership I select in the member portal.
           </label>
           <div class="form-footer">
             <button class="cta-button" type="submit">Create my account</button>
@@ -763,11 +723,10 @@
           <h3>Next steps</h3>
           <p id="status-message"></p>
           <div class="status-actions">
-            <button class="primary" type="button" id="complete-payment">Complete membership payment</button>
-            <a class="ghost hidden" id="open-portal" href="member.html">Open member portal</a>
+            <a class="primary hidden" id="open-portal" href="member.html">Open member portal</a>
             <button class="ghost" type="button" id="start-over">Start another request</button>
           </div>
-          <p class="form-note">Once payment is confirmed, our fulfillment team updates your member portal and begins production.</p>
+          <p class="form-note">Access the member portal to choose your membership tier, pay securely through Stripe, and follow delivery updates.</p>
         </aside>
       </section>
     </main>
@@ -781,50 +740,11 @@
 
     <script>
       const MEMBER_TOKEN_KEY = "notanaiMemberToken";
-      const membershipOptions = document.querySelectorAll(".membership-option");
-      const membershipInputs = document.querySelectorAll('input[name="membershipChoice"]');
-      const membershipPlanInput = document.getElementById("membershipPlan");
-      const membershipAmountInput = document.getElementById("membershipAmount");
       const onboardingForm = document.getElementById("onboarding-form");
       const statusPanel = document.getElementById("status-panel");
       const statusMessage = document.getElementById("status-message");
-      const completePaymentButton = document.getElementById("complete-payment");
       const openPortalLink = document.getElementById("open-portal");
       const startOverButton = document.getElementById("start-over");
-      let latestOrder = null;
-      let paymentInFlight = false;
-
-      function setMembershipSelection(selectedInput) {
-        const container = selectedInput.closest(".membership-option");
-        membershipOptions.forEach((option) => {
-          option.setAttribute("data-selected", option === container ? "true" : "false");
-        });
-        const planValue = container?.dataset.plan || selectedInput.value;
-        const amountValue = container?.dataset.amount || selectedInput.dataset.amount;
-        membershipPlanInput.value = planValue;
-        membershipAmountInput.value = amountValue;
-      }
-
-      membershipInputs.forEach((input) => {
-        input.addEventListener("change", () => setMembershipSelection(input));
-      });
-
-      membershipOptions.forEach((option) => {
-        option.addEventListener("click", (event) => {
-          if (event.target.tagName === "INPUT") {
-            return;
-          }
-          const radio = option.querySelector('input[type="radio"]');
-          if (radio && !radio.checked) {
-            radio.checked = true;
-            radio.dispatchEvent(new Event("change", { bubbles: true }));
-          }
-        });
-      });
-
-      if (membershipInputs.length) {
-        setMembershipSelection(membershipInputs[0]);
-      }
 
       function syncPortalVisibility(forceVisible = false) {
         if (!openPortalLink) return;
@@ -849,13 +769,7 @@
 
       function resetForm() {
         onboardingForm.reset();
-        if (membershipInputs.length) {
-          membershipInputs[0].checked = true;
-          setMembershipSelection(membershipInputs[0]);
-        }
         toggleStatusPanel(false);
-        latestOrder = null;
-        completePaymentButton.classList.remove("hidden");
         syncPortalVisibility();
       }
 
@@ -863,10 +777,6 @@
 
       onboardingForm.addEventListener("submit", async (event) => {
         event.preventDefault();
-        if (paymentInFlight) {
-          return;
-        }
-
         const formData = new FormData(onboardingForm);
         const password = formData.get("password");
         const confirmPassword = formData.get("confirmPassword");
@@ -891,62 +801,16 @@
           if (data.authToken) {
             localStorage.setItem(MEMBER_TOKEN_KEY, data.authToken);
           }
-          latestOrder = data;
-          const amount = (Number(data.transaction.amountCents) / 100).toFixed(2);
-          toggleStatusPanel(
-            true,
-            `Account created. Order #${data.order.id} is ready. Please finalize the $${amount} membership payment to activate your specialist team and access project updates in the member portal.`,
-            { showPortal: true }
-          );
+          const orderNumber = data?.order?.id ? `#${data.order.id}` : "";
+          const message = orderNumber
+            ? `Account created. Order ${orderNumber} is in our queue. Sign in to the member portal to select your membership tier and complete payment.`
+            : `Account created. Sign in to the member portal to select your membership tier and complete payment.`;
+
+          toggleStatusPanel(true, message, { showPortal: true });
           statusPanel.scrollIntoView({ behavior: "smooth" });
         } catch (error) {
           console.error(error);
           toggleStatusPanel(true, error.message || "We could not process your submission. Please try again or contact sale@notanai.ca for assistance.");
-        }
-      });
-
-      completePaymentButton.addEventListener("click", async () => {
-        if (!latestOrder || paymentInFlight) {
-          return;
-        }
-
-        paymentInFlight = true;
-        completePaymentButton.disabled = true;
-        completePaymentButton.textContent = "Processing...";
-
-        try {
-          const response = await fetch(`/api/orders/${latestOrder.order.id}/pay`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              reference: `MEM-${latestOrder.order.id}-${Date.now()}`,
-              method: "card",
-            }),
-          });
-
-          if (!response.ok) {
-            const error = await response.json().catch(() => ({ message: "Payment failed" }));
-            throw new Error(error.message || "Payment failed");
-          }
-
-          const data = await response.json();
-          latestOrder.order = data.order;
-          latestOrder.transaction = data.transaction;
-          toggleStatusPanel(
-            true,
-            `Payment confirmed. Your specialists are reviewing order #${data.order.id}. Track next steps from the member portal and watch your inbox for delivery.`,
-            { showPortal: true }
-          );
-          completePaymentButton.classList.add("hidden");
-        } catch (error) {
-          console.error(error);
-          toggleStatusPanel(true, error.message || "Unable to process payment. Try again or contact sale@notanai.ca for support.");
-        } finally {
-          paymentInFlight = false;
-          completePaymentButton.disabled = false;
-          completePaymentButton.textContent = "Complete membership payment";
         }
       });
 

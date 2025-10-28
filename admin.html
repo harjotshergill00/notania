@@ -337,11 +337,15 @@
             const intakeRole = order.intake?.desired_role ? `<div class="intake-detail"><strong>Role:</strong> ${order.intake.desired_role}</div>` : "";
             const intakeAttributes = order.intake?.job_attributes ? `<div class="intake-detail"><strong>Must-haves:</strong> ${order.intake.job_attributes}</div>` : "";
             const intakeNotes = order.intake?.project_notes ? `<div class="intake-detail">${order.intake.project_notes}</div>` : "";
-            const resumeLink = `/api/admin/resumes/${order.resume.id}?token=${token}`;
+            const membershipLabel = order.membership_plan ? order.membership_plan.replace(/_/g, " ") : "Plan pending";
+            const resumeLink = order.resume ? `/api/admin/resumes/${order.resume.id}?token=${token}` : null;
+            const resumeMarkup = resumeLink
+              ? `<a href="${resumeLink}" target="_blank" rel="noopener">Download CV</a><br /><small>${order.resume.original_name}</small>`
+              : "Resume pending";
             row.innerHTML = `
               <td>
                 <strong>#${order.id}</strong><br />
-                <span>${order.membership_plan.replace(/_/g, " ")}</span><br />
+                <span>${membershipLabel}</span><br />
                 ${orderStatusTag(order.status)}
                 ${intakeRole}
                 ${intakeAttributes}
@@ -352,14 +356,13 @@
                 <a href="mailto:${order.user.email}">${order.user.email}</a><br />
                 <span>${order.user.phone}</span>
               </td>
-              <td>
-                <a href="${resumeLink}" target="_blank" rel="noopener">Download CV</a><br />
-                <small>${order.resume.original_name}</small>
-              </td>
+              <td>${resumeMarkup}</td>
               <td>${paymentSummary(order.transaction)}</td>
               <td>
                 <div class="actions">
                   <select data-order="${order.id}" class="status-select">
+                    <option value="awaiting_plan" ${order.status === "awaiting_plan" ? "selected" : ""}>Awaiting plan</option>
+                    <option value="awaiting_payment" ${order.status === "awaiting_payment" ? "selected" : ""}>Awaiting payment</option>
                     <option value="intake" ${order.status === "intake" ? "selected" : ""}>Intake</option>
                     <option value="payment_received" ${order.status === "payment_received" ? "selected" : ""}>Payment received</option>
                     <option value="in_progress" ${order.status === "in_progress" ? "selected" : ""}>In progress</option>
