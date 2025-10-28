@@ -1,10 +1,10 @@
  (cd "$(git rev-parse --show-toplevel)" && git apply --3way <<'EOF' 
 diff --git a/index.html b/index.html
 new file mode 100644
-index 0000000000000000000000000000000000000000..6d8049d12d4b5a1304d2490902ce4fe6a66d6770
+index 0000000000000000000000000000000000000000..cb8fcb820b0f0e2f131ebe8c7f2eee76217c4c08
 --- /dev/null
 +++ b/index.html
-@@ -0,0 +1,366 @@
+@@ -0,0 +1,514 @@
 +<!DOCTYPE html>
 +<html lang="en">
 +  <head>
@@ -22,43 +22,73 @@ index 0000000000000000000000000000000000000000..6d8049d12d4b5a1304d2490902ce4fe6
 +          extend: {
 +            colors: {
 +              brand: {
-+                light: '#E6F4F1',
-+                DEFAULT: '#3B7C74',
-+                dark: '#28544F',
++                light: '#8FF6E2',
++                DEFAULT: '#38E1C0',
++                dark: '#12B193',
 +              },
-+              accent: '#4C8EF7',
++              midnight: '#050816',
++              cosmic: '#1C1E3A',
++              accent: '#8B5CF6',
 +            },
 +            fontFamily: {
 +              sans: ['"Work Sans"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
 +            },
 +            boxShadow: {
-+              soft: '0 20px 40px rgba(59, 124, 116, 0.12)',
++              neon: '0 20px 45px rgba(56, 225, 192, 0.25)',
++              card: '0 18px 40px rgba(15, 23, 42, 0.45)',
 +            },
 +            backgroundImage: {
-+              paper: "radial-gradient(circle at top left, rgba(59,124,116,0.08), transparent 55%), radial-gradient(circle at bottom right, rgba(76,142,247,0.08), transparent 45%)",
++              grid: "linear-gradient(120deg, rgba(143, 246, 226, 0.12) 0%, transparent 40%), linear-gradient(300deg, rgba(139, 92, 246, 0.12) 10%, transparent 60%)",
++              mesh: "radial-gradient(circle at 20% 20%, rgba(143, 246, 226, 0.18), transparent 45%), radial-gradient(circle at 80% 10%, rgba(139, 92, 246, 0.18), transparent 55%), radial-gradient(circle at 10% 80%, rgba(56, 225, 192, 0.1), transparent 55%)",
++            },
++            keyframes: {
++              float: {
++                '0%, 100%': { transform: 'translateY(0px)' },
++                '50%': { transform: 'translateY(-12px)' },
++              },
++              pulseGlow: {
++                '0%, 100%': { opacity: 0.35, transform: 'scale(1)' },
++                '50%': { opacity: 0.6, transform: 'scale(1.08)' },
++              },
++            },
++            animation: {
++              float: 'float 6s ease-in-out infinite',
++              pulseGlow: 'pulseGlow 5s ease-in-out infinite',
++            },
++            backdropBlur: {
++              12: '12px',
 +            },
 +          },
 +        },
 +      };
 +    </script>
-+    <link
-+      rel="preconnect"
-+      href="https://fonts.googleapis.com"
-+      crossorigin
-+    />
++    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
 +    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 +    <link
 +      href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&display=swap"
 +      rel="stylesheet"
 +    />
++    <style>
++      body::before,
++      body::after {
++        content: '';
++        position: fixed;
++        inset: 0;
++        z-index: -2;
++        background: radial-gradient(circle at 15% 20%, rgba(143, 246, 226, 0.12), transparent 45%),
++          radial-gradient(circle at 75% 30%, rgba(139, 92, 246, 0.16), transparent 55%),
++          radial-gradient(circle at 50% 80%, rgba(56, 225, 192, 0.12), transparent 60%);
++        pointer-events: none;
++      }
++    </style>
 +  </head>
-+  <body class="font-sans text-slate-900 bg-white">
-+    <header class="relative overflow-hidden bg-brand-light/40">
-+      <div class="absolute inset-0 bg-paper opacity-70 pointer-events-none"></div>
-+      <div class="relative mx-auto flex max-w-6xl flex-col px-6 py-6 md:flex-row md:items-center md:justify-between">
-+        <a href="#home" class="flex items-center gap-2 text-lg font-semibold text-brand-dark">
-+          <span class="flex h-10 w-10 items-center justify-center rounded-full border border-brand/20 bg-white text-brand">
-+            <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
++  <body class="font-sans text-slate-100 bg-midnight selection:bg-brand/40 selection:text-white antialiased">
++    <header class="sticky top-0 z-30 border-b border-white/5 bg-midnight/70 backdrop-blur-12">
++      <div class="mx-auto flex max-w-6xl flex-col px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
++        <a href="#home" class="flex items-center gap-3 text-lg font-semibold text-white">
++          <span class="relative flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-brand to-accent text-midnight shadow-neon">
++            <span class="absolute inset-0 animate-pulseGlow rounded-full bg-brand/40 blur-xl"></span>
++            <svg class="relative h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
 +              <path d="M4 12c0 4.418 3.582 8 8 8s8-3.582 8-8-3.582-8-8-8" />
 +              <path d="M12 4 9.5 7.5 12 11 14.5 7.5 12 4Z" />
 +              <path d="M12 13v5" />
@@ -66,306 +96,424 @@ index 0000000000000000000000000000000000000000..6d8049d12d4b5a1304d2490902ce4fe6
 +          </span>
 +          <span>NotAnAI</span>
 +        </a>
-+        <nav class="mt-4 flex flex-wrap gap-4 text-sm font-medium text-slate-600 md:mt-0 md:flex-nowrap">
-+          <a class="hover:text-brand" href="#home">Home</a>
-+          <a class="hover:text-brand" href="#how-it-works">How It Works</a>
-+          <a class="hover:text-brand" href="#pricing">Pricing</a>
-+          <a class="hover:text-brand" href="#why-notanai">Why NotAnAI</a>
-+          <a class="hover:text-brand" href="#contact">Contact</a>
++        <nav class="mt-4 flex flex-wrap gap-5 text-sm font-medium text-slate-300 sm:mt-0">
++          <a class="transition hover:text-brand" href="#home">Home</a>
++          <a class="transition hover:text-brand" href="#how-it-works">How It Works</a>
++          <a class="transition hover:text-brand" href="#pricing">Pricing</a>
++          <a class="transition hover:text-brand" href="#why-notanai">Why NotAnAI</a>
++          <a class="transition hover:text-brand" href="#contact">Contact</a>
 +        </nav>
 +      </div>
 +    </header>
 +
-+    <main id="home">
-+      <section class="relative overflow-hidden bg-white">
-+        <div class="absolute inset-y-0 left-0 w-full bg-gradient-to-r from-brand-light via-white to-white opacity-60"></div>
-+        <div class="relative mx-auto flex max-w-6xl flex-col gap-10 px-6 py-16 md:flex-row md:items-center">
-+          <div class="max-w-xl space-y-6">
-+            <span class="inline-flex items-center gap-2 rounded-full bg-brand/10 px-4 py-1 text-xs font-semibold uppercase tracking-widest text-brand">
++    <main class="overflow-hidden">
++      <section id="home" class="relative overflow-hidden">
++        <div class="absolute inset-0 bg-mesh opacity-60"></div>
++        <div class="absolute -left-20 top-24 hidden h-64 w-64 rounded-full bg-brand/30 blur-3xl lg:block"></div>
++        <div class="absolute -right-10 bottom-10 hidden h-80 w-80 rounded-full bg-accent/25 blur-3xl lg:block"></div>
++        <div class="relative mx-auto flex max-w-6xl flex-col gap-16 px-6 py-20 lg:flex-row lg:items-center">
++          <div class="max-w-xl space-y-8">
++            <span class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-slate-200">
 +              Human-crafted · ATS-approved
 +            </span>
-+            <h1 class="text-3xl font-bold text-slate-900 sm:text-4xl lg:text-5xl">
++            <h1 class="text-4xl font-semibold leading-tight text-white sm:text-5xl lg:text-6xl">
 +              Resumes that pass the test&mdash;crafted for humans, not machines.
 +            </h1>
-+            <p class="text-base text-slate-600 sm:text-lg">
-+              NotAnAI delivers authentic, polished resumes reviewed by real experts. We keep your voice, avoid AI tells, and make sure you sail past ATS filters.
++            <p class="text-base text-slate-300 sm:text-lg">
++              NotAnAI delivers authentic resumes reviewed by expert recruiters. We retain your voice, remove AI fingerprints, and calibrate every word to pass ATS and impress hiring teams.
 +            </p>
 +            <div class="flex flex-wrap gap-4">
 +              <a
 +                href="#pricing"
-+                class="inline-flex items-center justify-center rounded-full bg-brand px-6 py-3 text-sm font-semibold text-white shadow-soft transition hover:bg-brand-dark"
++                class="relative inline-flex items-center justify-center overflow-hidden rounded-full bg-gradient-to-r from-brand to-accent px-7 py-3 text-sm font-semibold text-midnight shadow-neon transition hover:scale-[1.02]"
 +              >
-+                Get Started
++                <span class="absolute inset-0 bg-white/20 opacity-0 transition group-hover:opacity-100"></span>
++                <span class="relative">Get Started</span>
 +              </a>
 +              <a
 +                href="#how-it-works"
-+                class="inline-flex items-center justify-center rounded-full border border-brand/20 px-6 py-3 text-sm font-semibold text-brand hover:border-brand hover:text-brand-dark"
++                class="inline-flex items-center justify-center gap-2 rounded-full border border-white/20 px-7 py-3 text-sm font-semibold text-white transition hover:border-brand hover:text-brand"
 +              >
++                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
++                  <path d="M5 12h14" />
++                  <path d="m12 5 7 7-7 7" />
++                </svg>
 +                See How It Works
 +              </a>
 +            </div>
-+            <div class="flex items-center gap-3 pt-4 text-sm text-slate-500">
-+              <svg class="h-5 w-5 text-brand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-+                <path d="m5 12 4 4 10-10" />
-+              </svg>
-+              Trusted by job seekers who crave human touch.
-+            </div>
++            <dl class="grid gap-6 sm:grid-cols-3">
++              <div>
++                <dt class="text-xs uppercase tracking-[0.3em] text-slate-400">Turnaround</dt>
++                <dd class="mt-1 text-2xl font-semibold text-white">48h</dd>
++              </div>
++              <div>
++                <dt class="text-xs uppercase tracking-[0.3em] text-slate-400">Human Editors</dt>
++                <dd class="mt-1 text-2xl font-semibold text-white">24/7</dd>
++              </div>
++              <div>
++                <dt class="text-xs uppercase tracking-[0.3em] text-slate-400">Success Rate</dt>
++                <dd class="mt-1 text-2xl font-semibold text-white">93%</dd>
++              </div>
++            </dl>
 +          </div>
-+          <div class="relative mx-auto max-w-md rounded-3xl border border-brand/20 bg-white p-8 shadow-soft">
-+            <div class="absolute -top-10 -left-6 -z-10 h-28 w-28 rounded-full bg-brand/10"></div>
-+            <div class="absolute -bottom-8 -right-8 -z-10 h-28 w-28 rounded-full bg-accent/10"></div>
-+            <h2 class="text-sm font-semibold uppercase tracking-wider text-brand">Why it works</h2>
-+            <p class="mt-4 text-xl font-semibold text-slate-900">Every resume is reviewed line-by-line by a human hiring pro.</p>
-+            <ul class="mt-6 space-y-3 text-sm text-slate-600">
-+              <li class="flex items-start gap-3">
-+                <span class="mt-1 inline-flex h-6 w-6 items-center justify-center rounded-full bg-brand/10 text-brand">1</span>
-+                Tailored language that sounds like you.
-+              </li>
-+              <li class="flex items-start gap-3">
-+                <span class="mt-1 inline-flex h-6 w-6 items-center justify-center rounded-full bg-brand/10 text-brand">2</span>
-+                Formatting optimized for ATS scanning and human readability.
-+              </li>
-+              <li class="flex items-start gap-3">
-+                <span class="mt-1 inline-flex h-6 w-6 items-center justify-center rounded-full bg-brand/10 text-brand">3</span>
-+                Delivered within 48 hours with actionable tips.
-+              </li>
-+            </ul>
-+            <div class="mt-6 rounded-2xl bg-brand/5 p-4 text-sm text-slate-600">
-+              <p class="font-semibold text-brand">Need it faster?</p>
-+              <p>Ask about our rush upgrade for 24-hour turnarounds.</p>
-+            </div>
-+          </div>
-+        </div>
-+      </section>
-+
-+      <section id="how-it-works" class="bg-slate-50">
-+        <div class="mx-auto max-w-6xl px-6 py-16">
-+          <div class="mx-auto max-w-2xl text-center">
-+            <h2 class="text-2xl font-semibold text-slate-900 sm:text-3xl">How it works</h2>
-+            <p class="mt-3 text-base text-slate-600">A transparent, human-first workflow that keeps your story authentic.</p>
-+          </div>
-+          <div class="mt-12 grid gap-8 md:grid-cols-3">
-+            <article class="rounded-3xl border border-brand/10 bg-white p-8 text-center shadow-soft/40">
-+              <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-brand text-white">1</div>
-+              <h3 class="mt-6 text-lg font-semibold text-slate-900">Upload Resume</h3>
-+              <p class="mt-3 text-sm text-slate-600">Send your current resume and role goals. We keep everything confidential.</p>
-+            </article>
-+            <article class="rounded-3xl border border-brand/10 bg-white p-8 text-center shadow-soft/40">
-+              <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-brand text-white">2</div>
-+              <h3 class="mt-6 text-lg font-semibold text-slate-900">Human Optimize</h3>
-+              <p class="mt-3 text-sm text-slate-600">Our resume specialists rewrite, format, and align content to targeted roles.</p>
-+            </article>
-+            <article class="rounded-3xl border border-brand/10 bg-white p-8 text-center shadow-soft/40">
-+              <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-brand text-white">3</div>
-+              <h3 class="mt-6 text-lg font-semibold text-slate-900">Ready to Apply</h3>
-+              <p class="mt-3 text-sm text-slate-600">Receive final files optimized for ATS and human readers, plus tailored tips.</p>
-+            </article>
-+          </div>
-+        </div>
-+      </section>
-+
-+      <section id="pricing" class="bg-white">
-+        <div class="mx-auto max-w-6xl px-6 py-16">
-+          <div class="mx-auto max-w-2xl text-center">
-+            <h2 class="text-2xl font-semibold text-slate-900 sm:text-3xl">Simple pricing</h2>
-+            <p class="mt-3 text-base text-slate-600">One transparent plan that keeps professional resumes within reach.</p>
-+          </div>
-+          <div class="mt-12 flex justify-center">
-+            <div class="relative w-full max-w-lg overflow-hidden rounded-3xl border border-brand/10 bg-white p-10 text-center shadow-soft">
-+              <div class="absolute right-6 top-6 rounded-full bg-brand/10 px-4 py-1 text-xs font-semibold uppercase tracking-wider text-brand">Most loved</div>
-+              <h3 class="text-lg font-semibold text-slate-900">Human-crafted resume</h3>
-+              <p class="mt-4 text-sm text-slate-600">Strategic refresh with custom feedback and ATS polish.</p>
-+              <p class="mt-6 text-4xl font-bold text-brand">$9.99</p>
-+              <p class="mt-2 text-xs uppercase tracking-widest text-slate-500">per resume</p>
-+              <ul class="mt-8 space-y-3 text-sm text-slate-600">
-+                <li class="flex items-center justify-center gap-2">
-+                  <svg class="h-4 w-4 text-brand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-+                    <path d="m5 12 5 5L20 7" />
-+                  </svg>
-+                  Two rounds of human edits
-+                </li>
-+                <li class="flex items-center justify-center gap-2">
-+                  <svg class="h-4 w-4 text-brand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-+                    <path d="m5 12 5 5L20 7" />
-+                  </svg>
-+                  ATS-tested formatting
-+                </li>
-+                <li class="flex items-center justify-center gap-2">
-+                  <svg class="h-4 w-4 text-brand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-+                    <path d="m5 12 5 5L20 7" />
-+                  </svg>
-+                  Recruiter-ready delivery
-+                </li>
-+              </ul>
-+              <a
-+                href="#contact"
-+                class="mt-8 inline-flex w-full items-center justify-center rounded-full bg-brand px-6 py-3 text-sm font-semibold text-white transition hover:bg-brand-dark"
-+              >
-+                Get Your Resume Fixed
-+              </a>
-+              <p class="mt-4 text-xs text-slate-500">Add-on: 24-hour rush delivery (+$12).</p>
-+            </div>
-+          </div>
-+        </div>
-+      </section>
-+
-+      <section id="why-notanai" class="bg-slate-50">
-+        <div class="mx-auto max-w-6xl px-6 py-16">
-+          <div class="mx-auto max-w-3xl text-center">
-+            <h2 class="text-2xl font-semibold text-slate-900 sm:text-3xl">Why NotAnAI?</h2>
-+            <p class="mt-3 text-base text-slate-600">We reverse the AI sameness and restore human nuance to every line.</p>
-+          </div>
-+          <div class="mt-12 grid gap-8 rounded-3xl border border-brand/10 bg-white p-8 shadow-soft md:grid-cols-2">
-+            <div>
-+              <h3 class="text-lg font-semibold text-brand">AI-generated resumes</h3>
-+              <ul class="mt-4 space-y-3 text-sm text-slate-600">
-+                <li class="flex items-start gap-3">
-+                  <span class="mt-1 h-2 w-2 rounded-full bg-slate-400"></span>
-+                  Repetitive, buzzword-heavy phrasing.
-+                </li>
-+                <li class="flex items-start gap-3">
-+                  <span class="mt-1 h-2 w-2 rounded-full bg-slate-400"></span>
-+                  Generic formatting that flags ATS filters.
-+                </li>
-+                <li class="flex items-start gap-3">
-+                  <span class="mt-1 h-2 w-2 rounded-full bg-slate-400"></span>
-+                  No accountability or human judgment.
-+                </li>
-+              </ul>
-+            </div>
-+            <div>
-+              <h3 class="text-lg font-semibold text-brand-dark">Human-crafted with NotAnAI</h3>
-+              <ul class="mt-4 space-y-3 text-sm text-slate-600">
-+                <li class="flex items-start gap-3">
-+                  <span class="mt-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-brand/10 text-brand">
-+                    <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-+                      <path d="m5 12 5 5L20 7" />
-+                    </svg>
-+                  </span>
-+                  Tailored narratives that emphasize your impact.
-+                </li>
-+                <li class="flex items-start gap-3">
-+                  <span class="mt-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-brand/10 text-brand">
-+                    <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-+                      <path d="m5 12 5 5L20 7" />
-+                    </svg>
-+                  </span>
-+                  Formats refined by recruiters and tested against ATS.
-+                </li>
-+                <li class="flex items-start gap-3">
-+                  <span class="mt-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-brand/10 text-brand">
-+                    <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-+                      <path d="m5 12 5 5L20 7" />
-+                    </svg>
-+                  </span>
-+                  Real people to answer your questions and guide your job hunt.
-+                </li>
-+              </ul>
-+            </div>
-+          </div>
-+        </div>
-+      </section>
-+
-+      <section id="testimonials" class="bg-white">
-+        <div class="mx-auto max-w-6xl px-6 py-16">
-+          <div class="mx-auto max-w-2xl text-center">
-+            <h2 class="text-2xl font-semibold text-slate-900 sm:text-3xl">Results people feel</h2>
-+            <p class="mt-3 text-base text-slate-600">Stories from job seekers who swapped AI clones for human-crafted clarity.</p>
-+          </div>
-+          <div class="mt-12 grid gap-8 md:grid-cols-3">
-+            <figure class="flex flex-col gap-6 rounded-3xl border border-brand/10 bg-slate-50 p-8">
-+              <blockquote class="text-sm text-slate-600">“My old AI resume sounded nothing like me. NotAnAI rewrote it, and I landed interviews in two weeks.”</blockquote>
-+              <figcaption class="text-sm font-semibold text-slate-900">Alex M. · Product Manager</figcaption>
-+            </figure>
-+            <figure class="flex flex-col gap-6 rounded-3xl border border-brand/10 bg-slate-50 p-8">
-+              <blockquote class="text-sm text-slate-600">“They caught details AI missed and made my achievements pop. Recruiters commented on how genuine it felt.”</blockquote>
-+              <figcaption class="text-sm font-semibold text-slate-900">Priya S. · UX Designer</figcaption>
-+            </figure>
-+            <figure class="flex flex-col gap-6 rounded-3xl border border-brand/10 bg-slate-50 p-8">
-+              <blockquote class="text-sm text-slate-600">“Worth every dollar. The tailored advice helped me adjust my LinkedIn too.”</blockquote>
-+              <figcaption class="text-sm font-semibold text-slate-900">Jordan R. · Marketing Strategist</figcaption>
-+            </figure>
-+          </div>
-+        </div>
-+      </section>
-+
-+      <section id="contact" class="bg-brand-dark text-white">
-+        <div class="mx-auto max-w-6xl px-6 py-16">
-+          <div class="grid gap-10 md:grid-cols-[1.2fr_1fr] md:items-center">
-+            <div>
-+              <h2 class="text-2xl font-semibold sm:text-3xl">Ready to humanize your resume?</h2>
-+              <p class="mt-4 text-base text-brand-light">
-+                Share your goals and current resume. A NotAnAI specialist will respond within one business day with next steps.
-+              </p>
-+              <div class="mt-8 flex flex-wrap items-center gap-6 text-sm text-brand-light/80">
-+                <div class="flex items-center gap-3">
-+                  <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-+                    <path d="M22 12 2 12" />
-+                    <path d="m15 5-7 7 7 7" />
-+                  </svg>
-+                  24-hour response time
++          <div class="relative mx-auto flex max-w-lg flex-col gap-6">
++            <div class="absolute -inset-10 -z-10 animate-pulseGlow rounded-[36px] bg-gradient-to-br from-brand/30 via-transparent to-accent/30 blur-3xl"></div>
++            <div class="relative rounded-[30px] border border-white/10 bg-white/10 p-8 shadow-card backdrop-blur-12">
++              <div class="flex items-center justify-between text-xs uppercase tracking-[0.3em] text-slate-200">
++                <span>Preview</span>
++                <span>ATS Score &mdash; 98</span>
++              </div>
++              <div class="mt-6 space-y-4">
++                <div class="rounded-2xl bg-white/10 p-5 shadow-inner shadow-black/20">
++                  <div class="flex items-center justify-between text-sm text-white">
++                    <span class="font-semibold">Jane Applicant</span>
++                    <span class="text-xs text-brand">Product Manager</span>
++                  </div>
++                  <p class="mt-3 text-xs text-slate-200">
++                    Led cross-functional launches delivering +42% engagement. Partners with engineering to humanize AI-powered tooling.
++                  </p>
 +                </div>
-+                <div class="flex items-center gap-3">
-+                  <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-+                    <path d="M12 1v22" />
-+                    <path d="M17 5H9.5a3.5 3.5 0 1 0 0 7H15a3.5 3.5 0 1 1 0 7H6" />
-+                  </svg>
-+                  Secure payments
++                <div class="grid gap-3 md:grid-cols-2">
++                  <div class="rounded-2xl bg-white/5 p-4 text-xs text-slate-200">
++                    <p class="text-[10px] uppercase tracking-[0.25em] text-slate-400">Highlights</p>
++                    <ul class="mt-2 space-y-1">
++                      <li class="flex items-center gap-2">
++                        <span class="h-1.5 w-1.5 rounded-full bg-brand"></span>
++                        Increased hiring conversions 3.5x
++                      </li>
++                      <li class="flex items-center gap-2">
++                        <span class="h-1.5 w-1.5 rounded-full bg-brand"></span>
++                        Authored human-first CX playbook
++                      </li>
++                    </ul>
++                  </div>
++                  <div class="rounded-2xl bg-white/5 p-4 text-xs text-slate-200">
++                    <p class="text-[10px] uppercase tracking-[0.25em] text-slate-400">Voice check</p>
++                    <p class="mt-2 text-[11px] leading-relaxed text-slate-300">
++                      Tone verified for human authenticity. AI markers removed.
++                    </p>
++                  </div>
 +                </div>
 +              </div>
 +            </div>
-+            <form class="space-y-4 rounded-3xl bg-white/10 p-8 shadow-soft">
++            <div class="relative -mt-2 self-end rounded-[24px] border border-brand/30 bg-gradient-to-r from-brand/20 to-accent/20 px-6 py-4 text-sm text-slate-200 shadow-neon backdrop-blur-12">
++              <div class="flex items-center gap-3">
++                <svg class="h-5 w-5 text-brand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
++                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
++                  <polyline points="7 10 12 15 17 10" />
++                  <line x1="12" y1="15" x2="12" y2="3" />
++                </svg>
++                <div>
++                  <p class="text-xs uppercase tracking-[0.3em] text-brand">Delivery portal</p>
++                  <p class="text-sm text-white">Download-ready in 48h, with optional rush in 24h.</p>
++                </div>
++              </div>
++            </div>
++          </div>
++        </div>
++      </section>
++
++      <section id="how-it-works" class="border-t border-white/10 bg-cosmic/70">
++        <div class="mx-auto max-w-6xl px-6 py-20">
++          <div class="mx-auto max-w-2xl text-center">
++            <p class="text-xs uppercase tracking-[0.3em] text-brand">Workflow</p>
++            <h2 class="mt-4 text-3xl font-semibold text-white sm:text-4xl">Human expertise in three precise steps</h2>
++            <p class="mt-4 text-base text-slate-300">
++              Every submission is assigned to a specialist who collaborates with you to produce an ATS-optimized, human-forward resume.
++            </p>
++          </div>
++          <div class="mt-16 grid gap-10 md:grid-cols-3">
++            <article class="relative rounded-[28px] border border-white/10 bg-white/5 p-8 shadow-card backdrop-blur-12">
++              <div class="absolute -top-6 left-8 flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-brand to-accent text-midnight shadow-neon">1</div>
++              <h3 class="mt-8 text-lg font-semibold text-white">Upload Resume</h3>
++              <p class="mt-3 text-sm text-slate-300">
++                Share your resume, job targets, and voice preferences in a secure portal with version tracking.
++              </p>
++              <div class="mt-6 flex items-center gap-3 text-xs text-brand">
++                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
++                  <polyline points="16 3 21 3 21 8" />
++                  <line x1="4" y1="20" x2="21" y2="3" />
++                  <polyline points="5 4 4 4 4 5" />
++                </svg>
++                Encrypted uploads, ATS compatibility scan
++              </div>
++            </article>
++            <article class="relative rounded-[28px] border border-white/10 bg-white/5 p-8 shadow-card backdrop-blur-12">
++              <div class="absolute -top-6 left-8 flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-brand to-accent text-midnight shadow-neon">2</div>
++              <h3 class="mt-8 text-lg font-semibold text-white">Human Optimize</h3>
++              <p class="mt-3 text-sm text-slate-300">
++                Editors rebuild structure, strengthen achievements, and ensure keywords feel natural and human-led.
++              </p>
++              <div class="mt-6 flex items-center gap-3 text-xs text-brand">
++                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
++                  <path d="M12 20h9" />
++                  <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5Z" />
++                </svg>
++                Narrative refinement, recruiter QA review
++              </div>
++            </article>
++            <article class="relative rounded-[28px] border border-white/10 bg-white/5 p-8 shadow-card backdrop-blur-12">
++              <div class="absolute -top-6 left-8 flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-brand to-accent text-midnight shadow-neon">3</div>
++              <h3 class="mt-8 text-lg font-semibold text-white">Ready to Apply</h3>
++              <p class="mt-3 text-sm text-slate-300">
++                Receive editable files, tailored cover letter prompts, and application sequencing advice.
++              </p>
++              <div class="mt-6 flex items-center gap-3 text-xs text-brand">
++                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
++                  <path d="M3 3h7l4 4h7v11a2 2 0 0 1-2 2H3Z" />
++                </svg>
++                Editable formats, tailored follow-up scripts
++              </div>
++            </article>
++          </div>
++        </div>
++      </section>
++
++      <section id="pricing" class="relative overflow-hidden border-y border-white/10 bg-gradient-to-b from-midnight via-cosmic to-midnight">
++        <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand/60 to-transparent"></div>
++        <div class="mx-auto max-w-6xl px-6 py-20">
++          <div class="mx-auto max-w-3xl text-center">
++            <p class="text-xs uppercase tracking-[0.3em] text-brand">Pricing</p>
++            <h2 class="mt-4 text-3xl font-semibold text-white sm:text-4xl">Transparent pricing for human-first results</h2>
++            <p class="mt-4 text-base text-slate-300">
++              One plan with all the essentials you need to stand out, plus optional rush upgrades.
++            </p>
++          </div>
++          <div class="mt-14 flex justify-center">
++            <div class="group relative w-full max-w-3xl rounded-[32px] border border-white/10 bg-white/10 p-[1px] shadow-neon backdrop-blur-12">
++              <div class="absolute inset-0 -z-10 rounded-[32px] bg-gradient-to-r from-brand/30 via-white/5 to-accent/30 opacity-0 blur-2xl transition group-hover:opacity-100"></div>
++              <div class="rounded-[30px] bg-midnight/70 px-10 py-12">
++                <div class="flex flex-col gap-10 lg:flex-row lg:items-center lg:justify-between">
++                  <div class="max-w-md">
++                    <h3 class="text-lg font-semibold text-white">Human-crafted resume</h3>
++                    <p class="mt-3 text-sm text-slate-300">
++                      Strategic overhaul tailored to your goals, reviewed by two senior editors for nuance and clarity.
++                    </p>
++                    <ul class="mt-6 space-y-3 text-sm text-slate-200">
++                      <li class="flex items-center gap-3">
++                        <span class="flex h-6 w-6 items-center justify-center rounded-full bg-brand/20 text-brand">✓</span>
++                        Two collaborative revision rounds
++                      </li>
++                      <li class="flex items-center gap-3">
++                        <span class="flex h-6 w-6 items-center justify-center rounded-full bg-brand/20 text-brand">✓</span>
++                        ATS & recruiter stress-tested formatting
++                      </li>
++                      <li class="flex items-center gap-3">
++                        <span class="flex h-6 w-6 items-center justify-center rounded-full bg-brand/20 text-brand">✓</span>
++                        Personalized positioning & interview prompts
++                      </li>
++                    </ul>
++                  </div>
++                  <div class="rounded-[26px] border border-brand/40 bg-gradient-to-br from-brand/15 to-accent/15 p-8 text-center text-slate-100 shadow-neon">
++                    <p class="text-xs uppercase tracking-[0.3em] text-brand">Launch offer</p>
++                    <p class="mt-4 text-5xl font-semibold text-white">$9.99</p>
++                    <p class="mt-2 text-xs uppercase tracking-[0.3em] text-slate-400">per resume</p>
++                    <a
++                      href="#contact"
++                      class="mt-8 inline-flex w-full items-center justify-center rounded-full bg-gradient-to-r from-brand to-accent px-6 py-3 text-sm font-semibold text-midnight shadow-neon transition hover:scale-[1.02]"
++                    >
++                      Get Your Resume Fixed
++                    </a>
++                    <p class="mt-4 text-xs text-slate-300">Rush upgrade: +$12 for 24-hour delivery.</p>
++                  </div>
++                </div>
++              </div>
++            </div>
++          </div>
++        </div>
++      </section>
++
++      <section id="why-notanai" class="bg-cosmic/80">
++        <div class="mx-auto max-w-6xl px-6 py-20">
++          <div class="mx-auto max-w-3xl text-center">
++            <p class="text-xs uppercase tracking-[0.3em] text-brand">Differentiators</p>
++            <h2 class="mt-4 text-3xl font-semibold text-white sm:text-4xl">Why NotAnAI beats generic AI output</h2>
++            <p class="mt-4 text-base text-slate-300">
++              We pair ATS intelligence with human storytelling so your experience stays authentic and unforgettable.
++            </p>
++          </div>
++          <div class="mt-16 grid gap-10 rounded-[32px] border border-white/10 bg-white/5 p-10 shadow-card backdrop-blur-12 lg:grid-cols-2">
++            <div class="space-y-6 rounded-[24px] border border-white/5 bg-midnight/60 p-8 shadow-inner shadow-black/20">
++              <div class="flex items-center gap-3 text-slate-300">
++                <span class="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-accent">AI</span>
++                <h3 class="text-lg font-semibold text-white">AI-generated resumes</h3>
++              </div>
++              <ul class="space-y-4 text-sm text-slate-300">
++                <li class="flex gap-3">
++                  <span class="mt-1 h-2 w-2 rounded-full bg-accent"></span>
++                  Recycled phrasing that flags pattern detection.
++                </li>
++                <li class="flex gap-3">
++                  <span class="mt-1 h-2 w-2 rounded-full bg-accent"></span>
++                  Over-optimized keywords that read robotic.
++                </li>
++                <li class="flex gap-3">
++                  <span class="mt-1 h-2 w-2 rounded-full bg-accent"></span>
++                  No accountability or human QA review.
++                </li>
++              </ul>
++            </div>
++            <div class="space-y-6 rounded-[24px] border border-brand/30 bg-gradient-to-br from-brand/20 to-accent/20 p-8 shadow-neon">
++              <div class="flex items-center gap-3 text-slate-900">
++                <span class="flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-brand">NA</span>
++                <h3 class="text-lg font-semibold text-midnight">Human-crafted with NotAnAI</h3>
++              </div>
++              <ul class="space-y-4 text-sm text-midnight/90">
++                <li class="flex gap-3">
++                  <span class="mt-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-midnight/20 text-brand">
++                    <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
++                      <path d="m5 12 5 5L20 7" />
++                    </svg>
++                  </span>
++                  Tailored narrative arcs that sound unmistakably like you.
++                </li>
++                <li class="flex gap-3">
++                  <span class="mt-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-midnight/20 text-brand">
++                    <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
++                      <path d="m5 12 5 5L20 7" />
++                    </svg>
++                  </span>
++                  ATS-tested layouts for seamless machine parsing.
++                </li>
++                <li class="flex gap-3">
++                  <span class="mt-1 inline-flex h-5 w-5 items-center justify-center rounded-full bg-midnight/20 text-brand">
++                    <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
++                      <path d="m5 12 5 5L20 7" />
++                    </svg>
++                  </span>
++                  Direct access to specialists for ongoing coaching.
++                </li>
++              </ul>
++            </div>
++          </div>
++        </div>
++      </section>
++
++      <section id="testimonials" class="relative overflow-hidden border-t border-white/10 bg-midnight">
++        <div class="absolute inset-0 bg-grid opacity-50"></div>
++        <div class="relative mx-auto max-w-6xl px-6 py-20">
++          <div class="mx-auto max-w-2xl text-center">
++            <p class="text-xs uppercase tracking-[0.3em] text-brand">Testimonials</p>
++            <h2 class="mt-4 text-3xl font-semibold text-white sm:text-4xl">Results job seekers feel immediately</h2>
++            <p class="mt-4 text-base text-slate-300">
++              Career shifters, new grads, and executives trust NotAnAI to translate their impact without the AI aftertaste.
++            </p>
++          </div>
++          <div class="mt-14 grid gap-8 md:grid-cols-3">
++            <figure class="group relative overflow-hidden rounded-[28px] border border-white/10 bg-white/10 p-8 shadow-card backdrop-blur-12">
++              <div class="absolute -top-20 right-0 h-36 w-36 rounded-full bg-brand/30 blur-3xl transition group-hover:scale-150"></div>
++              <blockquote class="relative text-sm text-slate-200">
++                “My AI-generated resume sounded hollow. NotAnAI restored my voice and I landed 3 interviews in 10 days.”
++              </blockquote>
++              <figcaption class="relative mt-6 text-sm font-semibold text-white">Alex M. · Product Manager</figcaption>
++            </figure>
++            <figure class="group relative overflow-hidden rounded-[28px] border border-white/10 bg-white/10 p-8 shadow-card backdrop-blur-12">
++              <div class="absolute -bottom-24 left-0 h-36 w-36 rounded-full bg-accent/30 blur-3xl transition group-hover:scale-150"></div>
++              <blockquote class="relative text-sm text-slate-200">
++                “The edits were so human. Recruiters commented on how natural my achievements read. Zero AI cringe.”
++              </blockquote>
++              <figcaption class="relative mt-6 text-sm font-semibold text-white">Priya S. · UX Designer</figcaption>
++            </figure>
++            <figure class="group relative overflow-hidden rounded-[28px] border border-white/10 bg-white/10 p-8 shadow-card backdrop-blur-12">
++              <div class="absolute -top-16 -left-10 h-36 w-36 rounded-full bg-brand/25 blur-3xl transition group-hover:scale-150"></div>
++              <blockquote class="relative text-sm text-slate-200">
++                “Worth every dollar. They even coached me on interview storytelling to match the resume narrative.”
++              </blockquote>
++              <figcaption class="relative mt-6 text-sm font-semibold text-white">Jordan R. · Marketing Strategist</figcaption>
++            </figure>
++          </div>
++        </div>
++      </section>
++
++      <section id="contact" class="relative overflow-hidden border-t border-white/10 bg-gradient-to-b from-cosmic to-midnight">
++        <div class="absolute inset-0 bg-mesh opacity-40"></div>
++        <div class="relative mx-auto max-w-6xl px-6 py-20">
++          <div class="grid gap-12 lg:grid-cols-[1.1fr_1fr] lg:items-center">
++            <div class="space-y-6">
++              <p class="text-xs uppercase tracking-[0.3em] text-brand">Contact</p>
++              <h2 class="text-3xl font-semibold text-white sm:text-4xl">Ready to humanize your resume?</h2>
++              <p class="text-base text-slate-300">
++                Submit your goals and a resume link. A NotAnAI specialist will respond within one business day with a tailored action plan.
++              </p>
++              <div class="grid gap-6 text-sm text-slate-200 sm:grid-cols-2">
++                <div class="flex items-center gap-3">
++                  <span class="flex h-9 w-9 items-center justify-center rounded-full bg-brand/20 text-brand">
++                    <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
++                      <path d="M22 12 2 12" />
++                      <path d="m15 5-7 7 7 7" />
++                    </svg>
++                  </span>
++                  <div>
++                    <p class="text-xs uppercase tracking-[0.25em] text-slate-400">Response time</p>
++                    <p class="mt-1 text-sm text-white">24 hours or sooner</p>
++                  </div>
++                </div>
++                <div class="flex items-center gap-3">
++                  <span class="flex h-9 w-9 items-center justify-center rounded-full bg-brand/20 text-brand">
++                    <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
++                      <path d="M12 1v22" />
++                      <path d="M17 5H9.5a3.5 3.5 0 1 0 0 7H15a3.5 3.5 0 1 1 0 7H6" />
++                    </svg>
++                  </span>
++                  <div>
++                    <p class="text-xs uppercase tracking-[0.25em] text-slate-400">Payments</p>
++                    <p class="mt-1 text-sm text-white">Secure + encrypted</p>
++                  </div>
++                </div>
++              </div>
++            </div>
++            <form class="space-y-5 rounded-[28px] border border-white/10 bg-white/10 p-8 shadow-card backdrop-blur-12">
 +              <div>
-+                <label class="block text-sm font-semibold" for="name">Name</label>
++                <label class="block text-sm font-semibold text-white" for="name">Name</label>
 +                <input
 +                  id="name"
 +                  name="name"
 +                  type="text"
 +                  autocomplete="name"
 +                  placeholder="Jane Applicant"
-+                  class="mt-2 w-full rounded-xl border border-white/20 bg-white/20 px-4 py-3 text-sm text-white placeholder:text-brand-light/60 focus:border-white focus:outline-none focus:ring-2 focus:ring-white/60"
++                  class="mt-2 w-full rounded-2xl border border-white/10 bg-midnight/40 px-4 py-3 text-sm text-white placeholder:text-slate-400 focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/50"
 +                />
 +              </div>
 +              <div>
-+                <label class="block text-sm font-semibold" for="email">Email</label>
++                <label class="block text-sm font-semibold text-white" for="email">Email</label>
 +                <input
 +                  id="email"
 +                  name="email"
 +                  type="email"
 +                  autocomplete="email"
 +                  placeholder="you@email.com"
-+                  class="mt-2 w-full rounded-xl border border-white/20 bg-white/20 px-4 py-3 text-sm text-white placeholder:text-brand-light/60 focus:border-white focus:outline-none focus:ring-2 focus:ring-white/60"
++                  class="mt-2 w-full rounded-2xl border border-white/10 bg-midnight/40 px-4 py-3 text-sm text-white placeholder:text-slate-400 focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/50"
 +                />
 +              </div>
 +              <div>
-+                <label class="block text-sm font-semibold" for="message">How can we help?</label>
++                <label class="block text-sm font-semibold text-white" for="message">How can we help?</label>
 +                <textarea
 +                  id="message"
 +                  name="message"
 +                  rows="4"
 +                  placeholder="Share your goals, target roles, and resume link."
-+                  class="mt-2 w-full rounded-xl border border-white/20 bg-white/20 px-4 py-3 text-sm text-white placeholder:text-brand-light/60 focus:border-white focus:outline-none focus:ring-2 focus:ring-white/60"
++                  class="mt-2 w-full rounded-2xl border border-white/10 bg-midnight/40 px-4 py-3 text-sm text-white placeholder:text-slate-400 focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/50"
 +                ></textarea>
 +              </div>
 +              <button
 +                type="submit"
-+                class="w-full rounded-full bg-white px-6 py-3 text-sm font-semibold text-brand-dark transition hover:bg-brand-light hover:text-brand-dark"
++                class="w-full rounded-full bg-gradient-to-r from-brand to-accent px-6 py-3 text-sm font-semibold text-midnight shadow-neon transition hover:scale-[1.02]"
 +              >
 +                Submit
 +              </button>
-+              <p class="text-xs text-brand-light/80">We never share your information. Cancel anytime.</p>
++              <p class="text-xs text-slate-300">We never share your information. Cancel anytime.</p>
 +            </form>
 +          </div>
 +        </div>
 +      </section>
 +    </main>
 +
-+    <footer class="border-t border-brand/10 bg-white">
-+      <div class="mx-auto flex max-w-6xl flex-col gap-4 px-6 py-8 text-sm text-slate-600 sm:flex-row sm:items-center sm:justify-between">
++    <footer class="border-t border-white/10 bg-midnight/90">
++      <div class="mx-auto flex max-w-6xl flex-col gap-4 px-6 py-10 text-sm text-slate-300 sm:flex-row sm:items-center sm:justify-between">
 +        <p>Copyright &copy; 2025 NotAnAI. All rights reserved.</p>
 +        <div class="flex flex-wrap gap-4">
-+          <a class="hover:text-brand" href="#">Terms</a>
-+          <a class="hover:text-brand" href="#contact">Contact</a>
++          <a class="transition hover:text-brand" href="#">Terms</a>
++          <a class="transition hover:text-brand" href="#contact">Contact</a>
 +        </div>
 +      </div>
 +    </footer>
